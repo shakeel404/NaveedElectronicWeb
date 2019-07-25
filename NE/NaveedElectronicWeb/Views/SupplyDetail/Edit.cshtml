@@ -1,0 +1,101 @@
+﻿@model NaveedElectronicWeb.NEModel.SupplyDetail
+
+<br />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-4">
+            <ul class="list-group">
+                <li class="list-group-item active">Supply</li>
+                <li class="list-group-item">
+                    <small class="text-info">Supplied by</small>
+                    <br />
+                    <strong>@Model.Supply.Supplier.SupplierName</strong>
+                    <small class="text-dark">@Model.Supply.Supplier.Company</small>
+                </li>
+                <li class="list-group-item">
+                    <small class="text-info">Date</small>
+                    <br />
+                    <strong>@Html.DisplayFor(model => model.Supply.SupplyDate)</strong>
+                </li>
+                <li class="list-group-item">
+                    <small class="text-info">Recieved by</small>
+                    <br />
+                    <strong>@Model.Supply.AspNetUser.UserName</strong>
+                    <small class="text-dark">@Model.Supply.AspNetUser.Email</small>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small class="text-info">
+                                Category
+                            </small>
+                            <br />
+                            <strong>
+                                @Model.Product.Category.CategoryName
+                            </strong>
+                        </div>
+                        <div class="col-md-6">
+                            <small class="text-info">
+                                Model
+                            </small>
+                            <br />
+                            <strong>
+                                @Model.Product.Model
+                            </strong>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+
+
+        <div class="col-md-8">
+            <div class="form-horizontal">
+                <h4>Supply</h4>
+                <hr />
+
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.SupplyId)
+                @Html.HiddenFor(model => model.ProductId)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PurchasePrice, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.PurchasePrice, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-warning" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>Product Warning!</strong> This change will effect product quantity and purchase price.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

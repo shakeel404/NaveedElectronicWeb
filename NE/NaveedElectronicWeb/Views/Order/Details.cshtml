@@ -1,0 +1,1045 @@
+﻿@model NaveedElectronicWeb.NEModel.CustomerOrder
+@{ 
+    bool HasGuarantor = Model.Guarantor != null;
+}
+
+<style>
+   
+    .text-hilight-header{
+        color:darkred !important;
+    }
+    .text-hilight-body{
+        color:#0e0a0a !important;
+    }
+    .text-thanks{
+        color:#00620b !important;
+    }
+    .icon-header:before {
+        color: darkred !important;
+    }
+   
+</style>
+<link href="~/Content/PrintPage.css" rel="stylesheet" />
+ 
+
+
+<div class="visible-print">
+    <div class="print-page">
+
+
+        <div class="row">
+
+            <div class="print-heading">
+
+                <h1 class="text-center">I N V O I C E</h1>
+
+            </div>
+        </div>
+        <div class="row">
+            &nbsp;
+        </div>
+        <div class="row">
+
+            <div class="print-title-right text-left">
+                <div class="col-xs-7">
+                    <h2>
+                        <span class="glyphicon glyphicon-leaf icon"></span> Naveed Electronics
+                    </h2>
+                </div>
+                <div class="col-xs-5">
+                    <small>Bagh Dehrai Road Main Bazar </small> <br />
+                    <small>Bara Durushkhela Matta Swat</small>
+
+                </div>
+            </div>
+
+            <div class="print-title-empty text-left">
+                <h4>
+                    <span class="glyphicon glyphicon-phone-alt icon-empty"></span> 0946-795569
+                    &nbsp;
+                    <span class="glyphicon glyphicon-phone icon-empty"></span> 0345-945-1182
+                    &nbsp;<span class="glyphicon glyphicon-phone icon-empty"></span> 0313-808-0788
+                </h4>
+
+
+
+            </div>
+
+        </div>
+
+        @{
+            int PrintTotalQuantity = Model.OrderDetails.Sum(od => od.Quantity);
+            int PrintGrandNetAmount = Model.OrderDetails.Sum(od => (od.SalePrice * od.Quantity) - od.Discount);
+            int PrintGrandPaid = Model.OrderPayments.Sum(od => od.AmountPaid);
+
+            int PrintGrandDues = PrintGrandNetAmount - PrintGrandPaid;
+            int NetDiscount = Model.OrderDetails.Sum(od => od.Discount);
+
+        }
+        <div class="row">
+            <!--Customer header-->
+            <div class="col-xs-5">
+                <div class="client-empty text-left">
+                    <h3>
+                        Bill To
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-user icon-client"></span>
+                        <small> @Model.Customer.CustomerName S/D of @Model.Customer.FatherName</small>
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-credit-card icon-client"> </span> 
+                        <small>  @Model.Customer.NIC</small>
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-map-marker icon-client"></span>
+                        <small>@Model.Customer.City.CityName  @Model.Customer.PrimaryAddress</small>
+                    </h3>
+                </div>
+                 
+                    @if (Model.Customer.CustomerContacts.Count > 0)
+                      {
+                        <div class="print-title-empty text-left">
+                            <h4>
+                                @{
+                                    var Contacts = Model.Customer.CustomerContacts.Count > 2 ? Model.Customer.CustomerContacts.Take(2) : Model.Customer.CustomerContacts;
+                                }
+
+                                @foreach (var contact in Contacts)
+                                {
+
+                                    <span class="glyphicon glyphicon-phone icon-empty "></span>
+                                    @contact.Number
+
+                                }
+                            </h4>
+                        </div>
+                      }
+                <div class="client-empty text-left">
+                    <h3>
+                       Order
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h4>
+                        <span class="glyphicon glyphicon-file icon-client"></span>
+                        @{
+
+                            string date = Model.OrderDate.ToString("yy");
+                            string id = Model.Id.ToString();
+                            string invoiceno = date + "0" + id;
+                        }
+                        @invoiceno  &nbsp; <span class="glyphicon glyphicon-calendar icon-client"></span> @Model.OrderDate.ToString("ddd, dd MMM yyyy")</>
+                    </h4>
+                </div>
+                        
+                 
+            </div>
+            <div class="col-xs-2"></div>
+
+            <!--Guarantor header-->
+           
+            <div class="col-xs-5  text-right">
+
+                @if (HasGuarantor)
+                {
+
+
+                <div class="client-empty text-left">
+                    <h3>
+                        Guarantor
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-user icon-client"></span>
+                        <small>@Model.Guarantor.GuarantorName &nbsp; <span class="glyphicon glyphicon-credit-card icon-client"></span> @Model.Guarantor.NIC</small>
+                    </h3>
+                </div>
+
+                <div class="client-empty text-left">
+                    <h4>
+                        <span class="glyphicon glyphicon-map-marker icon-empty"></span>
+                        @Model.Guarantor.PrimaryAddress
+                        &nbsp;
+                        <span class="glyphicon glyphicon-phone icon-empty"></span>
+                        @Model.Guarantor.Contact
+                    </h4>
+                </div>
+                }
+                <div class="client-empty text-left">
+                    <h3>
+                        Total Dues
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h1>
+                        <span class="glyphicon glyphicon-share-alt icon-client"></span>
+                        <small> PKR</small>
+                       
+                        @PrintGrandDues<small>.00</small>
+                        
+                    </h1>
+                </div>
+                <div class="client-empty text-left">
+                    <h3>
+                        Due Date 
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-calendar icon-empty"></span> @Model.DueDate.ToString("ddd, dd MMM yyyy")
+                    </h3>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+         &nbsp;
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+
+
+                <table class=" table table-striped">
+                    <tr class="info">
+                        <th>S.No</th>
+
+                        <th colspan="2" >Product</th> 
+                        <th class="text-center">Price </th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">Discount</th>
+                        <th class="text-center">Net Total </th>
+                        
+                    </tr>
+                    @{
+                        int row = 1;
+                    }
+                    @foreach (var item in Model.OrderDetails)
+                    {
+                        <tr>
+
+                            <td>@row</td>
+                            <td colspan="2">
+                                @item.Product.Category.CategoryName &nbsp; @item.Product.Model    
+                                        <span class="pull-right urdu-text">@item.Product.GuaranteeWarranty</span>
+                                     
+                                 
+                               
+                              
+                            </td> 
+                            <td class="text-center">@item.SalePrice</td>
+                            
+                            <td class="text-center">@item.Quantity</td>
+                            <td class="text-center">@{
+                                int Total = ((int)(item.SalePrice * item.Quantity));
+
+                            } 
+                            @Total
+                            </td>
+                            <td class="text-center">@item.Discount</td>
+                            <td class="text-center">@{
+                                int NetTotal = Total - item.Discount;
+
+                            }
+                            @NetTotal
+                            </td>
+                        </tr>
+
+                                    row++;
+                                }
+
+
+                    <tr>
+
+
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">@PrintTotalQuantity</th>
+                        <th class="text-center">@PrintGrandNetAmount</th>
+                        <th class="text-center">@NetDiscount </th>
+                        <th class="text-center">@PrintGrandNetAmount</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+           <div class="col-xs-12">
+               <div class="col-xs-5">
+                   @if (Model.OrderPayments.Count > 0)
+                   {
+                       row = 1;
+
+                       <div class="row">
+                           <div class="client-empty text-left">
+                               <h3>
+                                   <span class="glyphicon glyphicon-share-alt icon-client"></span>
+                                   Payments
+                               </h3>
+                           </div>
+                       </div>
+                       <div class="row">
+
+
+
+                            
+
+
+
+                               <table class=" table table-striped">
+                                   <tr class="info">
+                                       <th>S.No</th>
+                                       <th>Date</th>
+                                       <th class="text-center">Payment</th>
+                                   </tr>
+
+                                   @foreach (var item in Model.OrderPayments)
+                                   {
+                                       <tr>
+
+                                           <td>@row</td>
+                                           <td>@item.DatePaid.ToString("ddd , dd MMM yyyy")</td>
+                                           <td class="text-center">@item.AmountPaid</td>
+                                       </tr>
+                                       row++;
+                                   }
+
+
+                                   <tr class="info">
+                                       <th></th>
+                                       <th>Total</th>
+                                       <th class="text-center"><small>PKR </small>@PrintGrandPaid <small>.00</small> </th>
+                                   </tr>
+                               </table>
+
+                            
+
+                       </div>
+                   }
+               </div>
+               <div class="col-xs-7">
+                   <div class="row">
+                       <br />
+                       <div class="text-center">
+                           <h2 class="urdu-text text-hilight-header"> معززصارف </h2>
+                       </div>
+                   </div>
+                   @{
+                       
+
+                   }
+                   <div class="row">
+                       <div>
+
+                         @if (PrintGrandDues > 0 && Model.DueDate.Day == 5)
+                         {
+
+                             //5th day of every month
+                             int Installment = Model.MonthlyInstallment;
+                             int TotalInstallments = 0;
+
+                             var Month = Model.DueDate.Month;
+                             var Day = Model.DueDate.Day;
+                             var Year = Model.DueDate.Year;
+
+                             Month = Month - 1;
+                             if (Month == 0)
+                             {
+                                 Month = 12;
+                                 Year--;
+                             }
+                             var InstallmentFrom = new DateTime(Year, Month, Day);
+                             var Today = DateTime.Today;
+
+                             var Days = Today - InstallmentFrom;
+                             var DaysDiff = Days.Days;
+                             var NoOfInstallmets = Math.Ceiling((decimal)Days.Days / 30);
+                             var TimesText = string.Empty;
+
+
+                             if (DaysDiff > 0)
+                             {
+                                 TimesText = NoOfInstallmets.ToString()+ " * " ;
+                             }
+
+
+                             if (Installment > 0)
+                             {
+                                 TotalInstallments = (int)PrintGrandDues / Installment;
+                             }
+
+
+
+                             string InstallmentText = string.Empty;
+
+                             if (TotalInstallments > 1)
+                             {
+                                 InstallmentText = "اپکی کل " + TotalInstallments.ToString() + " اقساط باقی ہے۔";
+                             }
+                             else
+                             {
+                                 InstallmentText = "اپکی " + TotalInstallments.ToString() + " قسط  باقی ہے۔";
+                             }
+
+
+                             string MonthlyInstallmentText = " ماہانہ قسط کی رقم  "+TimesText+  Model.MonthlyInstallment.ToString()+   " روپے ہے۔";
+                            <h3 class="text-hilight-body urdu-text text-right">
+
+                                
+                                <span>
+                                    <span>
+                                        @InstallmentText  @MonthlyInstallmentText
+                                    </span>
+                                    <small><span class="glyphicon glyphicon-star icon-empty"></span></small>
+                                </span>
+
+
+                            </h3>
+
+                            <br />
+                            <h3 class="text-hilight-body urdu-text text-right">
+
+
+                                <span> <span> پر یا اس  سے پہلے ادا کرنا ہوگا۔  </span> <span class="text-hilight-header">@Model.DueDate.ToString("dddd, dd MMMM yyyy")</span>  <span> اگلا قسط </span> <small><span class="glyphicon glyphicon-star icon-empty"></span></small>   </span>
+
+
+                            </h3>
+                                <br />
+                                <h3 class="text-hilight-body urdu-text text-right">
+
+
+                                     
+
+
+
+                                        <span>قسط ادا نہ کرنے کے صورت میں 10 فیصد مہینے کے حساب سے   </span>
+                                        <small><span class="glyphicon glyphicon-star icon-empty"></span></small>
+                                  
+
+
+                                </h3>
+                                <h3 class="text-hilight-body urdu-text text-right">
+
+
+                                    <span>
+                                        جرمانہ لیا جائیگا جس میں کسی قسم کی رعایت نہیں کی جاٖئیگی۔ 
+                                    </span>
+                                    
+                                </h3>
+                                <br />
+                         }
+                         else if (PrintGrandDues > 0 && Model.DueDate.Day != 5)
+                         {
+                             //agremant date
+
+
+
+                             string AggrementText = "اپکی بقایا رقم " + PrintGrandDues + "ہے۔";
+
+
+
+
+
+                            <h3 class="text-hilight-body urdu-text text-right">
+
+
+                                <span>
+                                    <span>
+                                       @AggrementText
+                                    </span>
+                                    <small><span class="glyphicon glyphicon-star icon-empty"></span></small>
+                                </span>
+
+
+                            </h3>
+
+                            <br />
+                            <h3 class="text-hilight-body urdu-text text-right">
+
+
+                             ہے۔ <span class="text-hilight-header">@Model.DueDate.ToString("dddd, dd MMMM yyyy")</span> بقایا رقم کی اداٖئیگی کی اخری تاریخ
+                                <small><span class="glyphicon glyphicon-star icon-empty"></span></small>
+
+                            </h3>
+                            <br />
+                                <h3 class="text-hilight-body urdu-text text-right">
+
+
+                                    <span>
+
+
+
+                                        <span>بقایا رقم  ادا نہ کرنے کے صورت میں 10 فیصد مہینے کے حساب سے    </span>
+                                        <small><span class="glyphicon glyphicon-star icon-empty"></span></small>
+                                    </span>
+
+
+                                </h3>
+                                <h3 class="text-hilight-body urdu-text text-right">
+
+
+                                    <span>
+                                        جرمانہ لیا جائیگا جس میں کسی قسم کی رعایت نہیں کی جاٖئیگی ۔
+                                    </span>
+                                    <span>
+                                        &nbsp;
+                                        &nbsp;
+                                    </span>
+
+                                </h3>
+                                <br />
+                         }
+                           
+                           <h3 class="text-hilight-body urdu-text text-right">
+
+
+                               <span>
+
+
+
+                                   <span>
+                                       مال دوکان میں اچھی طرح چیک کریں کیونکہ دوبارہ واپس یا تبدیل نہیں ہوگا۔
+                                   </span>
+                                   <small><span class="glyphicon glyphicon-star icon-empty"></span></small>
+                               </span>
+
+
+                           </h3>
+                           <br />
+                           <h3 class="text-hilight-body urdu-text text-right">
+
+
+                               <span>
+
+
+
+                                   <span>
+                                       مال دوکان میں چیک کرنے کے بعد نقص پایا گیا تو اس کا ذمہ دار صارف ہوگا اور مستری کے  
+                                   </span>
+                                   <small><span class="glyphicon glyphicon-star icon-empty"></span></small>
+                               </span>
+
+
+                           </h3>
+                           <h3 class="text-hilight-body urdu-text text-right">
+
+
+                               <span> 
+                                   انے جانے کے تمام اخراجات برداشت کرناپڑیگا۔
+                               </span>
+                               <span>
+                                   &nbsp;
+                                   &nbsp; 
+                               </span>
+
+                           </h3>
+
+                           <div class="row">
+                               <br />
+                               <div class="text-center">
+                                   <h2 class="urdu-text text-thanks"> ہماری خدمات حاصل کرنے کا شکریہ </h2>
+                               </div>
+                           </div>
+                           
+                       </div>
+                   </div>
+               </div>
+           </div>
+        </div>
+       
+
+        <div class="row">
+          <hr />
+        </div>
+      
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-6">
+                    <span class="glyphicon glyphicon-copyright-mark icon-empty"></span> <span class="trad">2017</span> &nbsp; <span class="glyphicon glyphicon-leaf icon-empty"></span> &nbsp;<span class="trad">Naveed Electronics</span>
+                    <br />
+                    <strong class="text-dark"> <span class="glyphicon glyphicon-calendar icon-empty"></span> Date Printed @DateTime.Now.ToString("dd-MMM-yyyy") @DateTime.Now.ToString("h:mm tt")</strong>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <span class="glyphicon glyphicon-star icon-empty"></span><span class="trad"> Powerd by Udhyana</span> <span class="glyphicon glyphicon-phone icon-empty"></span><span class="trad"> 0346-947-6404</span>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div class="hidden-print">
+
+
+    @Html.HiddenFor(m => m.Id)
+    <h4>Order</h4>
+    <p>
+
+        <ul class="breadcrumb">
+            <li class="active">
+                <strong>
+                    @Html.ActionLink("Back to Customers", "Index","Customer")
+                </strong>
+            </li>
+            <li class="active">
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+            </li>
+        </ul>
+
+    </p>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <ul id="mainboard" class="list-group">
+                <li class="list-group-item active">
+                    Order
+                </li>
+                <li class="list-group-item">
+                    <small class="text-info">Order by</small>
+                    <h5><strong>@Model.Customer.CustomerName</strong> <small>@Model.Customer.City.CityName</small></h5>
+                </li>
+                <li class="list-group-item">
+                    <small class="text-info">Guarantor</small>
+                    @if (Model.Guarantor != null)
+               {
+            <h5><strong>@Model.Guarantor.GuarantorName</strong><small>@Html.ActionLink("View","Details",new {id= Model.Guarantor.Id })</small></h5>
+               }
+               else
+               {
+            <h5><strong>No Guarantor</strong><small> @Html.ActionLink("Add One", "Edit", new { id = Model.Id},new { @class="text-dark"})</small></h5>
+               }
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small class="text-info">Order Date</small>
+                            <h5><strong>@Model.OrderDate.ToString("ddd, dd MMM yyyy")</strong></h5>
+                        </div>
+                        <div class="col-md-6">
+                            <small class="text-info">Due Date</small>
+                            <h5><strong>@Model.DueDate.ToString("ddd, dd MMM yyyy")</strong></h5>
+                        </div>
+                    </div>
+                </li>
+                @{
+               int GrandTotal = Model.OrderDetails.Sum(od => (od.SalePrice * od.Quantity) - od.Discount);
+               int NetPayment = Model.OrderPayments.Sum(op => op.AmountPaid);
+               int NetDues = GrandTotal - NetPayment;
+                }
+                @if (NetDues > 0 && Model.MonthlyInstallment > 0 && Model.DueDate.Day == 5)
+                {
+
+
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-info">Monthly Installment</small>
+                                @{ 
+                                    var Month = Model.DueDate.Month;
+                                    var Day = Model.DueDate.Day;
+                                    var Year = Model.DueDate.Year;
+
+                                    Month = Month - 1;
+                                    if (Month == 0)
+                                    {
+                                        Month = 12;
+                                        Year--;
+                                    }
+                                    var InstallmentFrom = new DateTime(Year, Month, Day);
+                                    var Today = DateTime.Today;
+
+                                    var Days = Today - InstallmentFrom;
+                                    var DaysDiff = Days.Days;
+                                    var NoOfInstallmets = Math.Ceiling((decimal)Days.Days / 30);
+
+                                    if (DaysDiff > 0)
+                                    {
+                                <h5><strong>@Model.MonthlyInstallment x @NoOfInstallmets</strong></h5>
+                                    }
+                                    else
+                                    {
+                                <h5><strong>@Model.MonthlyInstallment</strong></h5>
+                                        }
+                                    }
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-info">Remaining</small>
+                                <h5>
+                                    <strong>
+                                        @{ int NoOfInstallments = 0;
+                                             
+                                                NoOfInstallments = (int)(NetDues / Model.MonthlyInstallment);
+                                            
+                                        }
+                                        @NoOfInstallments
+                                    </strong>
+                                </h5>
+                            </div>
+                        </div>
+                    </li>
+                                            }
+               
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <small class="text-info">Total</small>
+                            <h5><strong>@GrandTotal.00</strong></h5>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-info">Payment</small>
+                            <h5><strong>@NetPayment.00</strong></h5>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-info">Dues</small>
+                            <h5><strong id="TotalDues">@NetDues.00</strong></h5>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        
+                            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                                <div class="btn-group">
+                                    <button type="button" id="PrintBtn" class="btn btn-info action-btn" onclick="PrintPage()">Print Preview</button>
+                                </div>
+                               <div class="btn-group">
+                                   @Html.ActionLink("Delete", "Delete", new { id = Model.Id }, new { @class = "btn btn-danger " })
+                               </div>
+                              <div class="btn-group">
+                                  @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary " })
+                              </div>
+                            </div>
+                         
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-8">
+
+            <div class="row">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="nav active"><a href="#items" data-toggle="tab">Products</a></li>
+                    <li class="nav"><a href="#payments" data-toggle="tab">Payments</a></li>
+
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="items">
+
+                        <ul class="list-group">
+                            <li class="list-group-item border-top-0"></li>
+
+                            @foreach (var item in Model.OrderDetails)
+                        {
+                        <li class="list-group-item">
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <small class="text-info">Category</small><br />
+                                    <strong>@item.Product.Category.CategoryName</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <small class="text-info">Model</small> <br />
+                                    <strong>@item.Product.Model</strong>
+                                </div>
+                                <div class="col-md-1">
+                                    <small class="text-info">Price</small><br />
+                                    <strong>@item.SalePrice</strong>
+                                </div>
+                                <div class="col-md-1">
+                                    <small class="text-info">Quantity</small><br />
+                                    <strong>@item.Quantity</strong>
+                                </div>
+                                <div class="col-md-1">
+                                    <small class="text-info">Discount</small><br />
+                                    <strong>@item.Discount</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <small class="text-info">Total</small><br />
+                                    <strong>
+                                        @{
+                                               int NetTotal = (item.SalePrice * item.Quantity) - item.Discount;
+                                        }
+                                        @NetTotal
+                                    </strong>
+                                    
+                                </div>
+                                <div class="col-md-1">
+                                    <small class="text-right">@Html.ActionLink("Edit", "Edit", "OrderDetail", new { id = item.Id }, new { @class = "text-warning" })</small>
+                                    <small class="text-right">@Html.ActionLink("Delete", "Delete", "OrderDetail", new { id = item.Id }, new { @class = "text-danger" })</small>
+                                </div>
+                            </div>
+                        </li>
+                                                }
+                            <li id="itemsfooter" class="list-group-item active-inverse">
+                                <div class="row">
+                                    <div class="col-md-3">
+
+                                    </div>
+                                    <div class="col-md-3">
+
+                                    </div>
+                                    <div class="col-md-2">
+
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <small class="text-white">Total Items</small><br />
+                                        <strong>@Model.OrderDetails.Sum(sd => sd.Quantity)</strong>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <small class="text-white">Net Total</small><br />
+                                        <strong>
+                                            @GrandTotal
+                                        </strong>
+                                    </div>
+                                </div>
+
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane fade" id="payments">
+
+                        <ul class="list-group" id="paymentlist">
+                            <li class="list-group-item border-top-0"></li>
+
+                            @foreach (var item in Model.OrderPayments)
+                        {
+                        <li class="list-group-item">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <small class="text-info">Paid by</small><br />
+                                    <strong>@item.AspNetUser.UserName</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-info">Date</small> <br />
+                                    <strong>@item.DatePaid.ToString("ddd,dd MMM yyyy")</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <small class="text-info">Amount </small><br />
+                                    <strong>@item.AmountPaid</strong>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="delete">
+                                        <input type="hidden" value="@item.Id" />
+                                        <button type="button" onclick="DeleteAmount(this)" class="close"><span class="glyphicon glyphicon-remove"></span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        }
+                            <li id="amountfooter" class="list-group-item active-inverse">
+                                <div class="row">
+                                    <div class="col-md-8">
+
+
+                                        <div class="col-lg-6">
+                                            <div class="input-group">
+                                                <input class="form-control text-box single-line valid" data-val="true" data-val-number="The  Amount must be a number." data-val-required="Pleae enter valid amount." id="AmountPaid" name="AmountPaid" type="number" value="0"
+                                                       onchange="ValidateAmount(this)" placeholder="Amount" />
+                                                <span class="input-group-btn">
+                                                    <button id="AddBtn" onclick="AddAmount()" class="btn btn-success" type="button">Add</button>
+                                                </span>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+                                    <div class="col-md-4">
+
+                                        <small class="text-white">Total Payment</small><br />
+                                        <strong>@Model.OrderPayments.Sum(sp => sp.AmountPaid)</strong>
+
+                                    </div>
+
+                                </div>
+
+                            </li>
+                        </ul>
+
+                    </div>
+                    <div id="error"></div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+
+        var apiUrl = "@Url.Action("","api/OrderPayment")";
+        $(document).ready(function () {
+
+
+
+
+           
+
+            var currentURL = window.location;
+
+            if (currentURL.href.includes("#payments")) {
+
+                $('.nav-tabs a[href="#payments"]').tab('show');
+            }
+        });
+
+
+
+
+        function PrintPage() {
+            window.print();
+        }
+
+        function AddAmount() {
+
+            $("#AddBtn").addClass("hide");
+
+            var id = $("#Id").val();
+            var amount = parseInt($("#AmountPaid").val());
+            $.ajax({
+                url:apiUrl ,
+                data: JSON.stringify({
+                    OrderId: id,
+                    AmountPaid: amount
+
+                }),
+                traditional: true,
+                type: "POST",
+                contentType: "application/json",
+                success: function () {
+
+                    $("#AddBtn").removeClass("hide");
+                    SuccessPaid();
+
+                },
+                error: function (response) {
+
+
+                    FailurePaid();
+                    $("#AddBtn").removeClass("hide");
+                }
+            });
+
+
+        }
+        function DeleteAmount(sender) {
+
+            var id = $(sender).parents(".delete").children(":input:first").val();
+
+            $.ajax({
+                url: apiUrl +"/"+ id.toString(),
+                traditional: true,
+                type: "Delete",
+                success: function () {
+
+
+                    SuccessDelete($(sender).parents("li"));
+
+                },
+                error: function (response) {
+
+                    
+
+                    FailureDelete();
+
+                }
+            });
+
+        }
+        function ValidateAmount(sender) {
+
+            var amount = parseInt($(sender).val());
+
+            var dues = parseInt($("#TotalDues").text());
+
+
+            if (amount > dues) {
+
+                var alertmessage = '<div class="alert alert-danger alert-dismissible" role= "alert" >  <button type="button" class="close" style="padding-top:0px !Important; margin-top:0px !Important;" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <strong>Amount</strong> <small>Please enter amount less then or equal to ' + dues.toString() + '</small>   </div > ';
+
+                $("#error").children().remove();
+
+                var btn = $("#AddBtn");
+                if (!btn.hasClass("hide")) {
+
+                    btn.addClass("hide");
+                }
+
+                $("#error").append(alertmessage);
+            }
+            else {
+                var btn = $("#AddBtn");
+                if (btn.hasClass("hide")) {
+
+                    btn.removeClass("hide");
+                }
+
+                $("#error").children().remove();
+
+            }
+
+
+
+
+        }
+
+        function SuccessPaid() {
+
+            Refresh();
+
+        }
+        function FailurePaid() {
+
+            RaiseError("Amount", "Error occured while adding amount.");
+        }
+
+        function SuccessDelete(item) {
+
+            $(item).remove();
+
+            Refresh();
+
+        }
+
+        function FailureDelete() {
+            RaiseError("Amount", "Error occured while deleting amount");
+        }
+
+        function Refresh() {
+            var currentURL = window.location;
+            window.location.hash = "#payments";
+            window.location.reload(true);
+        }
+
+        function RaiseError(title, message) {
+            var alertmessage = '<div class="alert alert-danger alert-dismissible" role= "alert" >  <button type="button" class="close" style="padding-top:0px !Important; margin-top:0px !Important;" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <strong>' + title + '</strong> <small> ' + message + '</small>   </div > ';
+
+            $("#error").children().remove();
+            $("#error").append(alertmessage);
+        }
+    </script>
+}

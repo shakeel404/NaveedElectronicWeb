@@ -1,0 +1,259 @@
+﻿@model IEnumerable<NaveedElectronicWeb.NEModel.Category>
+
+
+
+<link href="~/Content/PrintPage.css" rel="stylesheet" />
+
+
+<div class="visible-print">
+
+    <div class="print-page">
+
+
+        <div class="row">
+
+            <div class="print-heading">
+
+                <h1 class="text-center">I N V O I C E</h1>
+
+            </div>
+        </div>
+        <div class="row">
+            &nbsp;
+        </div>
+        <div class="row">
+
+            <div class="print-title-right text-left">
+                <div class="col-xs-7">
+                    <h2>
+                        <span class="glyphicon glyphicon-leaf icon"></span> Naveed Electronics
+                    </h2>
+                </div>
+                <div class="col-xs-5">
+                    <small>Bagh Dehrai Road Main Bazar </small> <br />
+                    <small>Bara Durushkhela Matta Swat</small>
+
+                </div>
+            </div>
+
+            <div class="print-title-empty text-left">
+                <h4>
+                    <span class="glyphicon glyphicon-phone-alt icon-empty"></span> 0946-795569
+                    &nbsp;
+                    <span class="glyphicon glyphicon-phone icon-empty"></span> 0345-945-1182
+                    &nbsp;<span class="glyphicon glyphicon-phone icon-empty"></span> 0313-808-0788
+                </h4>
+
+
+
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <!--Supplier header-->
+            <div class="col-xs-5">
+                <div class="client-empty text-left">
+                    <h3>
+                        List of Products
+                    </h3>
+                </div> 
+                <div class="client-heading text-left">
+                    <h2>
+                        <span class="glyphicon glyphicon-th-list icon-client"></span>
+                        @Model.Count() Categories
+                    </h2>
+                </div>
+
+            </div>
+            <div class="col-xs-2"></div>
+
+            <!--Naveed electronics header-->
+            <div class="col-xs-5  text-right">
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            &nbsp;
+        </div>
+
+
+        @if (Model.Count() > 0)
+        {
+
+
+            <div class="row">
+                <div class="col-xs-12">
+
+
+                    <table class=" table table-striped">
+                       
+                        @{
+                            int row = 1;
+                            int catrow = 1;
+                        }
+
+                        @foreach (var category in Model)
+                        {
+
+                            <tr >
+                                <th style="background-color:dimgray !important;">@catrow</th>
+                                <th style="background-color:dimgray !important;" colspan="8"><h3>@category.CategoryName <small>@category.Products.Count Products</small></h3></th>
+                            </tr>
+
+                            if (category.Products.Count == 0)
+                            {
+                                catrow++;
+                                row = 1;
+                                continue;
+                            }
+                            <tr class="info">
+                                <th>S.No</th>
+                                <th>Model</th>
+                                <th class="text-center">Purchase</th>
+                                <th class="text-center">Sale</th>
+                                <th class="text-center">Installment</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-center">Net Purchase</th>
+                                <th class="text-center">Net Sale</th>
+                                <th class="text-center">Net Installment</th>
+                            </tr>
+
+                            foreach (var item in category.Products)
+                                {
+
+
+                                <tr>
+
+                                    <td>@catrow.@row</td>
+                                    <td>@item.Model </td>
+                                    <td class="text-center">@item.PurchasePrice</td>
+                                    <td class="text-center">@item.SalePrice</td>
+
+                                    <td class="text-center">@item.InstallmentPrice</td>
+                                    <td class="text-center">@item.Quantity</td>
+
+                                    <td class="text-center">
+                                        @{
+                                            double PrintNetPurchase = item.PurchasePrice * item.Quantity;
+                            }
+
+                            @PrintNetPurchase
+                        </td>
+                                    <td class="text-center">
+                                        @{
+                                            double PrintNetSale = item.SalePrice * item.Quantity;
+
+                        }
+
+                        @PrintNetSale
+                    </td>
+                                    <td class="text-center">
+                                        @{
+                                            double PrintInstallment = item.InstallmentPrice * item.Quantity;
+                                        }
+                                        @PrintInstallment
+                                    </td>
+                                </tr>
+
+                                                row++;
+                                            }
+                                             
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>  
+                                                <th>Total</th>
+                                                <th class="text-center">@category.Products.Sum(p => p.Quantity)</th>
+                                                <th class="text-center">@category.Products.Sum(p => p.PurchasePrice * p.Quantity)</th>
+                                                <th class="text-center">@category.Products.Sum(p => p.SalePrice * p.Quantity)</th>
+                                                <th class="text-center">@category.Products.Sum(p => p.InstallmentPrice * p.Quantity)</th>
+
+                                            </tr>
+                                                catrow++; 
+                                                row= 1;
+                                                <tr>
+                                                    <td style="background-color:transparent !important;" colspan="9">&nbsp;</td>
+                                                </tr>
+                                            }
+
+                        <tr>
+                            <th style="background-color:dimgray !important;"  ></th>
+                            <th style="background-color:dimgray !important;"></th>
+                            <th style="background-color:dimgray !important;"></th>
+                            <th style="background-color:dimgray !important;"></th>
+                            <th style="background-color:dimgray !important;">Grand Total</th>
+                            <th style="background-color:dimgray !important;" class="text-center">@Model.Sum(c=>c.Products.Sum(p => p.Quantity))</th>
+                            <th style="background-color:dimgray !important;" class="text-center">@Model.Sum(c=>c.Products.Sum(p => p.PurchasePrice * p.Quantity))</th>
+                            <th style="background-color:dimgray !important;" class="text-center">@Model.Sum(c=>c.Products.Sum(p => p.SalePrice * p.Quantity))</th>
+                            <th style="background-color:dimgray !important;" class="text-center">@Model.Sum(c=>c.Products.Sum(p => p.InstallmentPrice * p.Quantity))</th>
+
+                        </tr>
+
+
+                       
+                    </table>
+                </div>
+            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="print-title-empty text-left">
+                                                <h4>
+                                                    <span class="glyphicon glyphicon-search icon-empty"></span> No Products Found.
+                                                </h4>
+
+
+
+                                            </div>
+                                        }
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-6">
+                    <span class="glyphicon glyphicon-copyright-mark icon-empty"></span> <span class="trad">2017</span> &nbsp; <span class="glyphicon glyphicon-leaf icon-empty"></span> &nbsp;<span class="trad">Naveed Electronics</span>
+                    <br />
+                    <strong class="text-dark"> <span class="glyphicon glyphicon-calendar icon-empty"></span> Date Printed @DateTime.Now.ToString("dd-MMM-yyyy") @DateTime.Now.ToString("h:mm tt")</strong>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <span class="glyphicon glyphicon-star icon-empty"></span><span class="trad"> Powerd by Udhyana</span> <span class="glyphicon glyphicon-phone icon-empty"></span><span class="trad"> 0346-947-6404</span>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+<div class="hidden-print">
+
+
+    <div>
+        <ol class="breadcrumb">
+            <li class="active">
+                <strong>
+
+                    @Html.ActionLink("Back to List", "Index")
+                </strong>
+            </li>
+            <li><button type="button" onclick="Print()" class="btn btn-link">Print</button></li>
+        </ol>
+    </div>
+</div> 
+
+@section Scripts{
+    
+    <script>
+
+        $(document).ready(Print());
+        function Print() {
+            window.print();
+        }
+
+    </script>
+    
+    
+    }

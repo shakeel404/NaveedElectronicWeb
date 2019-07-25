@@ -1,0 +1,747 @@
+﻿@model NaveedElectronicWeb.NEModel.Customer
+
+<style>
+    .combo {
+        width: 50% !important;
+    }
+
+    .full {
+        max-width: 100% !important;
+    }
+
+    .panel-btn {
+        border-radius: 0px !important;
+    }
+</style>
+
+@{
+    bool Installment = ViewBag.IsInstallment;
+    string IsInstallment = "false";
+    if (Installment)
+    {
+        IsInstallment = "true";
+    }
+}
+
+<input type="hidden" id="Installment" value="@IsInstallment" />
+
+
+
+<div id="parent" class="row">
+
+    <div id="leftpane" class="col-md-6">
+
+        <div class="panel panel-info">
+            <div class="panel-heading">Product</div>
+            <div class="panel-body">
+                <div class="row ">
+                    <div class="col-md-6   ">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="CategorySelect" id="CategorySelect" onchange="GetProducts($(this).val())" class="form-control" data-val-required="Please select a category." data-val-range="Please select a category" data-val-range-max="10000000" data-val-range-min="1" data-val="true" placeholder="Select Category"></select>
+                            <span class="text-danger field-validation-valid" data-valmsg-for="CategorySelect" data-valmsg-replace="true"></span>
+
+                            <label>Model</label>
+                            <select name="ModelSelect" id="ModelSelect" onchange="GetProductDetail($(this).val())" class="form-control " data-val-required="Please select a Model." data-val-range="Please select a Model" data-val-range-max="10000000" data-val-range-min="1" data-val="true" placeholder="Select Model"></select>
+                            <span class="text-danger field-validation-valid" data-valmsg-for="ModelSelect" data-valmsg-replace="true"></span>
+
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label>Available Quantity</label>
+                            <input type="text" id="AvailableQuantity" placeholder="Quantity" class="form-control" disabled="disabled" />
+                            <label>Price</label>
+                            <input type="text" id="Price" placeholder="Price" class="form-control" disabled="disabled" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row" id="iteminfo">
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" value="1" min="1" id="Quantity" placeholder="Quantity" class="form-control" onchange="SetNetTotal()" onkeypress="SetNetTotal()" oninput="SetNetTotal()" />
+                            <label>Discount</label>
+                            <input type="number" min="0" value="0" id="Discount" placeholder="Discount" class="form-control" onchange="SetNetTotal()" onkeypress="SetNetTotal()" oninput="SetNetTotal()" />
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label>Total</label>
+                            <input type="number" value="1" min="1" id="Total" placeholder="Quantity" class="form-control" disabled="disabled" />
+                            <br />
+                            <button class="btn btn-primary btn-group-justified" onclick="AddItem()">Add <span class="glyphicon glyphicon-shopping-cart"></span></button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <div id="rightpane" class=" col-md-6">
+        <div class="row">
+
+            <div class="panel panel-info">
+                <div class="panel-heading"> Customer </div>
+                <div class="panel-body">
+
+
+                    <h4>
+                        @if (Installment)
+                        {
+                            <span class="label label-primary">New Order On Installment</span>
+                        }
+                        else
+                        {
+                            <span class="label label-primary">New Order On Cash</span>
+                        }
+                    </h4>
+
+
+
+                    <div class="row">
+
+
+
+                        @Html.HiddenFor(model => model.Id)
+                        <h3>&nbsp;&nbsp;@Model.CustomerName <small>s/d of @Model.FatherName @Model.NIC</small> </h3>
+                        <h5>&nbsp;&nbsp;&nbsp;&nbsp;@Model.City.CityName <small>@Model.PrimaryAddress</small> </h5>
+
+
+
+
+
+
+
+                    </div>
+                    @{
+                        int TotalOrders = Model.CustomerOrders.Count;
+                        int TotalProducts = Model.CustomerOrders.Sum(o => o.OrderDetails.Sum(ord => ord.Quantity));
+                        int NetTotal = Model.CustomerOrders.Sum(o => o.OrderDetails.Sum(ord => (ord.SalePrice * ord.Quantity) - ord.Discount));
+                        int TotalPayment = Model.CustomerOrders.Sum(o => o.OrderPayments.Sum(ord => ord.AmountPaid));
+                        int TotalDues = NetTotal - TotalPayment;
+                    }
+                    <div class="row bg-danger">
+                        <div class="col-md-2">
+                            <small class="text-info">Orders</small> <br />
+                            <strong>@TotalOrders</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-info"> Products</small><br />
+                            <strong>@TotalProducts </strong>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-info">Total</small> <br />
+                            <strong>@NetTotal</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-info"> Payment</small><br />
+                            <strong>@TotalPayment</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-info"> Dues</small><br />
+                            <strong>@TotalDues</strong>
+                        </div>
+                        <div class="col-md-2">
+
+
+                        </div>
+                    </div>
+                    <div class="row">&nbsp;</div>
+                    <div class="row">
+                        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                            @Html.ActionLink("Cancel Order", "Index", "Customer", null, new { @class = "btn btn-warning panel-btn" })
+                            @Html.ActionLink("Add Guarantor", "Create", "Guarantor", new { customerid = Model.Id }, new { @class = "btn btn-primary panel-btn", target = "_blank" })
+                            @Html.ActionLink("Details", "Details", "Customer", new { id = Model.Id }, new { @class = "btn btn-success panel-btn" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+<div id="error">
+
+</div>
+@using (Html.BeginForm())
+{
+    Html.AntiForgeryToken();
+
+    <div class="row">
+        <table class="table table-striped" id="tablecart">
+            <tr>
+                <th>Product</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-center">Price</th>
+                <th class="text-center">Total</th>
+                <th class="text-center">Discount</th>
+                <th class="text-center">Net Total</th>
+                <th class="text-center"></th>
+            </tr>
+        </table>
+    </div>
+    <div class="row" id="TotalsPane">
+
+        <div class="col-md-6">
+
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading">Total</div>
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="form-group">
+
+                            <div class="input-group">
+                                <span class="input-group-addon">Grand Total</span>
+                                <input id="grandtotal" class="form-control" type="number" placeholder="Grand Total" disabled="disabled" />
+                                <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;Quantity</span>
+                                <input id="grandquantity" class="form-control" type="number" placeholder="Grand Quantity" disabled="disabled" />
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="form-group">
+
+                            <div class="input-group">
+                                <span class="input-group-addon ">&nbsp;&nbsp;&nbsp;&nbsp;Payment</span>
+                                <input id="payment" name="Payment" min="0" value="0" class="form-control" type="number" placeholder="Payment" onchange="SetPayment()" onkeypress="SetPayment()" oninput="SetPayment()" />
+                                <span class="input-group-addon">Remaining</span>
+                                <input id="remaining" class="form-control" type="number" placeholder="Remaining" disabled="disabled" />
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="form-group">
+
+                            <div class="input-group">
+                                <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Months</span>
+                                <input id="months" min="0" value="1" class="form-control" type="number" placeholder="Months to pay" onchange="SetPayment()" onkeypress="SetPayment()" oninput="SetPayment()" />
+                                <span class="input-group-addon">Installment</span>
+                                <input id="installment" readonly="readonly" name="Installment" class="form-control" type="number" placeholder="Installment" />
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="form-group">
+
+                            <div class="input-group date" id="duedate">
+
+                                <input type="text" name="DueDate" class="form-control full" data-date-format="dddd,DD MMMM YYYY" id="date" />
+                                <span class="input-group-addon">
+                                    &nbsp;&nbsp;Due Date
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <select name="GuarantorId" id="GuarantorSelect" class="form-control full" placeholder="Select Guarantor"></select>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-info " onclick="GetGuarantorsHandler();"><span class="glyphicon glyphicon-refresh"></span></button>
+
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row text-center">
+
+                        <button class="btn btn-success btn-lg btn-block panel-btn" type="submit">Finalize <span class="glyphicon glyphicon-ok"></span></button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script>
+
+    var GrandTotal = 0;
+    var TotalItems = 0;
+    var Index = 0;
+    var IsInstallment = false;
+    var DefaultBackground = $("#remaining").css("background");
+    var DefaultFontWaight = $("#remaining").css("font-weight");
+    var DefaultBackColor = $("#remaining").css("color");
+    var DefaultWhitBacground = $("#payment").css("background");
+    $(window).load(function () {
+
+
+        var today = new Date();
+
+        var day = today.getDate();
+        var month = today.getMonth()+1;
+        var year = today.getFullYear();
+
+ 
+
+        if (day > 20)
+        {
+            month += 2;
+            day = 5;
+
+            if (month > 12) {
+
+                if (month > 13) {
+                    month = 2;
+                }
+                else {
+                    month = 1;
+
+                }
+
+                year++;
+
+            }
+        }
+        else {
+            month += 1;
+            day = 5;
+            if (month > 12) {
+
+                if (month > 13) {
+                    month = 2;
+                }
+                else {
+                    month = 1;
+
+                }
+
+                year++;
+
+            }
+        }
+
+        var defaultdate = new Date(year, month-1, day);
+
+        $('.date').datetimepicker({
+            defaultDate: defaultdate
+        });
+
+        $('.date').on("dp.change", function (date) {
+        });
+
+        $(document).on('click', 'span.month, th.next, th.prev, th.switch, span.year', function (e) {
+
+            e.stopPropagation();
+        });
+
+        GetCategories();
+        GetGuarators();
+        var insallment = $("#Installment").val();
+        if (insallment == "true") {
+            IsInstallment = true;
+        }
+        ToggleItemInfo(0);
+        SetGrandTotal();
+    });
+
+
+
+
+    var customerId = $("#Id").val();
+    var apiurl = "@Url.Action("","api/Product")";
+
+
+
+
+
+
+
+    function GetCategories() {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#CategorySelect").html(procemessage).show();
+
+
+        $.ajax({
+            url: apiurl,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var markup = "<option value='0'>Select Category</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].Id + ">" + data[x].CategoryName + "</option>";
+
+                }
+                $("#CategorySelect").html(markup).show();
+            },
+            error: function (reponse) {
+                alert("Category error : " + reponse);
+            }
+        });
+    }
+
+    function GetProducts(catid) {
+        $("#Price").val(0);
+        $("#AvailableQuantity").val(0)
+        ToggleItemInfo(0);
+        if (catid == 0) {
+
+            $("#ModelSelect").html("<option value='0'>Select Model</option>").show();
+            return false;
+        }
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#ModelSelect").html(procemessage).show();
+
+        $.ajax({
+            url: apiurl,
+            data: { id: catid },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var markup = "<option value='0'>Select Model</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].Id + ">" + data[x].Model + "</option>";
+                }
+                $("#ModelSelect").html(markup).show();
+            },
+            error: function (reponse) {
+                alert("Products error : " + reponse);
+            }
+        });
+    }
+
+    function GetProductDetail(productid) {
+        if (productid == 0)
+        {
+            $("#Price").val(0);
+
+            $("#AvailableQuantity").val(0)
+            return false;
+        }
+
+        var detailUrl = "@Url.Action("Detail", "api/Product")";
+        detailUrl += "/" + productid;
+        $.ajax({
+            url: detailUrl,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+
+
+
+
+
+                    if (IsInstallment)
+                        $("#Price").val(data.InstallmentPrice);
+                    else
+                        $("#Price").val(data.SalePrice);
+
+
+                    var availablequantity = 0;
+
+                    var quantity = 0;
+                    quantity = ValidateQuantity(productid);
+
+
+                    var quantityInDb = parseInt(data.Quantity);
+                    availablequantity = quantityInDb - quantity;
+                    $("#AvailableQuantity").val(availablequantity)
+
+                    SetNetTotal();
+
+                    ToggleItemInfo(availablequantity);
+            },
+            error: function (reponse) {
+                alert("Product Detail error : " + reponse);
+            }
+        });
+    }
+
+    function GetGuarators() {
+
+        var guaratorUrl = "@Url.Action("", "api/Guarantor")";
+
+        var customerid = customerId;
+
+        $.ajax({
+            url: guaratorUrl,
+            data: { customerid: customerid },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+
+                var markup = "<option value='0'>Select Guarantor</option>";
+                for (var x = 0; x < data.length; x++) {
+                    if (x === 0)
+                    {
+                        markup += "<option selected='true' value=" + data[x].Id + ">" + data[x].GuarantorName + "</option>";
+                    }
+                    else {
+                        markup += "<option value=" + data[x].Id + ">" + data[x].GuarantorName + "</option>";
+                    }
+
+                }
+                $("#GuarantorSelect").html(markup).show();
+            },
+            error: function (reponse) {
+
+                alert("Guarantor error : " + reponse);
+            }
+        });
+    }
+
+    function GetGuarantorsHandler() {
+
+        GetGuarators();
+
+    }
+
+    function SetNetTotal() {
+
+        var quantity = $("#Quantity").val();
+        var price = $("#Price").val();
+        var discount = $("#Discount").val();
+
+        var nettotal = 0;
+
+
+        var Total = $("#Total");
+
+        nettotal = (quantity * price) - discount;
+        Total.val(nettotal);
+
+
+
+    }
+    function SetGrandTotal() {
+
+        $("#grandtotal").val(GrandTotal);
+        $("#grandquantity").val(TotalItems);
+        if (GrandTotal > 0) {
+
+            $("#TotalsPane").show();
+        }
+        else {
+            $("#TotalsPane").hide();
+        }
+    }
+    function AddItem() {
+
+        var availablequantity = $("#AvailableQuantity").val();
+        ClearError();
+        if (availablequantity == 0)
+        {
+            ShowError("Available Quantity is 0");
+            return;
+        }
+
+
+        var tablecart = $("#tablecart");
+
+        var category = $("#CategorySelect :selected").text();
+        var model = $("#ModelSelect :selected").text();
+        var productid = $("#ModelSelect :selected").val();
+        var quantity = parseInt($("#Quantity").val());
+        var price = parseInt($("#Price").val());
+        var discount = parseInt($("#Discount").val());
+
+        if (quantity > availablequantity) {
+
+            ShowError("Quantity is greater then Available Quantity");
+            return;
+        }
+        var total = quantity * price;
+        var nettotal = 0;
+
+        nettotal = total - discount;
+
+
+
+
+        var clas = "product" + productid;
+
+
+
+        var row = `<tr class="`+clas+`">
+            <td class="product">`+ category + ` ` + model +` <input type="hidden" name="Details[].ProductId" value="`+productid+`" /> </td>
+            <td class="text-center quantity">`+ quantity +`<input type="hidden" name="Details[].Quantity" value="`+quantity+`" /></td>
+            <td class="text-center price">`+ price +`<input type="hidden" name="Details[].Price" value="`+price+`" /></td>
+            <td class="text-center total">`+total+`</td>
+            <td class="text-center discount">`+ discount +`<input type="hidden" name="Details[].Discount" value="`+discount+`" /></td>
+            <td class="text-center nettotal">`+ nettotal +`</td>
+     <td class="text-center"><button class="btn   btn-link " onclick="RemoveItem(this)"><span class="glyphicon glyphicon-remove "></span></button></td>
+        </tr>`;
+
+
+        tablecart.append(row);
+        availablequantity -= quantity;
+        $("#AvailableQuantity").val(availablequantity);
+
+        ToggleItemInfo(availablequantity);
+        GrandTotal += nettotal;
+        TotalItems += quantity;
+        IndexRows();
+        SetPayment();
+        SetGrandTotal();
+    }
+    function RemoveItem(row) {
+
+
+        var catid = $("#CategorySelect :selected").val();
+        GetProducts(catid);
+        GetProductDetail(0);
+
+        var quantity = parseInt($(row).parents("tr").find(".quantity").text());
+        var nettotal = parseInt($(row).parents("tr").find(".nettotal").text());
+        GrandTotal -= nettotal;
+        TotalItems -= quantity;
+        $(row).parents("tr").remove();
+
+        IndexRows();
+        SetPayment();
+        SetGrandTotal();
+
+    }
+    function ValidateQuantity(productid) {
+        var id = "product" + productid;
+        var quantity = 0;
+        if ($("." + id).length > 0) {
+
+
+            $("." + id).each(function (i, item) {
+
+                quantity += parseInt($(item).find(".quantity").text());
+
+            });
+
+        }
+
+        return quantity;
+    }
+    function ToggleItemInfo(availablequantity) {
+        if (availablequantity > 0) {
+
+            $("#iteminfo").show();
+        }
+        else {
+            $("#iteminfo").hide();
+        }
+
+
+    }
+    function ShowError(message) {
+        var error = `<div class="alert alert-danger" role="alert">
+
+    <strong>Sorry </strong> `+message+`
+    </div>`;
+        $("#error").html(error);
+    }
+    function ClearError() {
+        $("#error").html('');
+    }
+    function SetPayment() {
+
+        var payment = parseInt( $("#payment").val());
+
+        if (payment > GrandTotal) {
+            $("#payment").css("background", "#F7D4D4");
+
+
+            $("#payment").css("color", "#CA0000");
+
+        }
+        else {
+            $("#payment").css("background", DefaultWhitBacground);
+
+
+            $("#payment").css("color", DefaultBackColor);
+        }
+
+        var remaining = GrandTotal - payment;
+        $("#remaining").val(remaining);
+
+
+        if (remaining > 0) {
+            $("#remaining").css("background", "#FAE5E1");
+
+
+            $("#remaining").css("color", "#D5492F");
+        }
+        else {
+            $("#remaining").css("background", DefaultBackground);
+
+
+            $("#remaining").css("color", DefaultBackColor);
+        }
+        var months = parseInt($("#months").val());
+
+        if (months < 1)
+            months = 1;
+        var installment = remaining / months;
+
+        $("#installment").val(installment);
+
+        if (installment > 0) {
+
+            $("#installment").css("background", "#DAFBDF");
+
+
+            $("#installment").css("color", "#039A16");
+        }
+        else {
+            $("#installment").css("background", DefaultBackground);
+
+
+            $("#installment").css("color", DefaultBackColor);
+        }
+    }
+    function IndexRows() {
+
+        $("tr").each(function (i, row) {
+
+
+            var index = i - 1;
+            var indexed = "[" + index + "]";
+
+            var rawhtml = row.innerHTML;
+
+
+            rawhtml = rawhtml.replace(/\[.*?\]\s?/g, indexed);
+            $(row).html(rawhtml);
+
+
+
+
+        });
+    }
+
+    </script>
+}
+

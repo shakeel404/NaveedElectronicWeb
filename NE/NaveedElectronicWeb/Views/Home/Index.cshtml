@@ -1,0 +1,695 @@
+﻿
+<div class="row">
+    &nbsp;
+</div>
+<div class="row">
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <h1> <span class="glyphicon glyphicon-share-alt"></span></h1>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h1 id="totaldueorderstile" class="text-right">
+<img src="~/Content/Images/WarningTC.gif" /></h1>
+                            <div>Total Due Orders</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-group">
+                    <a href="@Url.Action("DueOrders","Print")" target="_blank" class="list-group-item"><span class="pull-left">Print  </span>
+<span class="pull-right"><span class="glyphicon glyphicon-print"></span></span>
+                    <div class="clearfix"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <h1> <span class="glyphicon glyphicon-share-alt"></span></h1>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h1 id="paybleordertile" class="text-right">
+<img src="~/Content/Images/SuccessTC (2).gif" /></h1>
+                            <div>Payble in next 10 days</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-group">
+                    <a href="@Url.Action("PaybleDueOrders","Print")" target="_blank" class="list-group-item">
+                        <span class="pull-left">Print</span>
+                        <span class="pull-right"><span class="glyphicon glyphicon-print"></span></span>
+                        <div class="clearfix"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <h1> <span class="glyphicon glyphicon-share-alt"></span></h1>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h1 id="payblebeforetile" class="text-right">
+                                <img src="~/Content/Images/DangerTC.gif" />  </h1>
+                            <div>Payble before today</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-group">
+                    <a href="@Url.Action("PaybleBeforeToday","Print")" target="_blank" class="list-group-item">
+                        <span class="pull-left">Print</span>
+                        <span class="pull-right"><span class="glyphicon glyphicon-print"></span></span>
+                        <div class="clearfix"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <h1> <span class="glyphicon glyphicon-th"></span></h1>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h4 id="quantity">0</h4>
+                            <p> of <strong id="models"> 0 </strong> Models</p> 
+                            <p>In <strong id="categories">0</strong> Categories </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-group">
+                    <a href="@Url.Action("Print","Category")" target="_blank" class="list-group-item">
+                        <span class="pull-left">Print</span>
+                        <span class="pull-right"><span class="glyphicon glyphicon-print"></span></span>
+                        <div class="clearfix"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+     
+    <div class="row">
+        
+        <div class="col-md-4">
+            <div class="panel panel-success">
+                <div class="panel-heading">Purchase </div>
+                <div class="panel-body">
+ 
+                    <form target="_blank" method="post" action="@Url.Action("Purchase","Print")">
+
+
+
+                        <div class="row">
+                            <div class='col-md-12'>
+                                <div class="form-group">
+                                    <div class='input-group date' id='startdatepicker'>
+
+                                        <input type='text' class="form-control" data-date-format="dddd,DD MMMM YYYY" id="start" name="start" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span> Start
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"></div>
+                            <div class='col-md-12'>
+                                <div class="form-group">
+                                    <div class='input-group date' id='enddatepicker'>
+
+                                        <input type='text' class="form-control" data-date-format="dddd,DD MMMM YYYY" id="end" name="end" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span> End
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"></div>
+                            <div class="col-md-12">
+                                <input type="submit" value="Print" class="btn btn-info pull-right" />
+                            </div>
+                        </div>
+
+
+
+
+
+                    </form>
+
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-success">
+                <div class="panel-heading">Sale</div>
+                <div class="panel-body">
+
+
+                    <form target="_blank" method="post" action="@Url.Action("Sale","Print")">
+
+
+
+                        <div class="row">
+                            <div class='col-md-12'>
+                                <div class="form-group">
+                                    <div class='input-group date' id='startdatepicker'>
+
+                                        <input type='text' class="form-control" data-date-format="dddd,DD MMMM YYYY" id="start" name="start" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span> Start
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"></div>
+                            <div class='col-md-12'>
+                                <div class="form-group">
+                                    <div class='input-group date' id='enddatepicker'>
+
+                                        <input type='text' class="form-control" data-date-format="dddd,DD MMMM YYYY" id="end" name="end" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span> End
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"></div>
+                            <div class="col-md-12">
+                                <div class="pull-left">
+                                    <select class="form-control" id="cityid" name="cityid">
+                                        <option value="0">Loading</option>
+                                        
+                                    </select>
+                                    
+                                </div>
+                                <input type="submit" value="Print" class="btn btn-info pull-right" />
+                            </div>
+                        </div>
+
+
+
+
+
+                    </form>
+
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-success">
+                <div class="panel-heading">Installment (Ograi) </div>
+                <div class="panel-body">
+
+
+                    <form target="_blank" method="post" action="@Url.Action("Installment","Print")">
+
+
+
+                        <div class="row">
+                            <div class='col-md-12'>
+                                <div class="form-group">
+                                    <div class='input-group date' id='startdatepicker'>
+
+                                        <input type='text' class="form-control" data-date-format="dddd,DD MMMM YYYY" id="start" name="start" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span> Start
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"></div>
+                            <div class='col-md-12'>
+                                <div class="form-group">
+                                    <div class='input-group date' id='enddatepicker'>
+
+                                        <input type='text' class="form-control" data-date-format="dddd,DD MMMM YYYY" id="end" name="end" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span> End
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"></div>
+                            <div class="col-md-12">
+                                <div class="pull-left">
+
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Print by Location <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" id="menu">
+                                            
+                                        </ul>
+                                    </div>
+
+                                    
+                                </div>
+                               
+                                <input type="submit" value="Print" class="btn btn-info pull-right" />
+                            </div>
+                        </div>
+
+
+
+
+
+                    </form>
+
+
+
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="list-group" id="dueorderslist">
+                <div class="list-group-item list-group-item-info">
+                    <span class="pull-left">
+                        <span class="glyphicon glyphicon-share-alt"></span> Due Orders
+                    </span>
+                    <span class="pull-right">
+                        <strong id="dueorders">0</strong> of <strong id="totaldueorders">0</strong>
+                    </span>
+                    <div class="clearfix"></div>
+                </div>
+                 
+            </div>
+            <button type="button" class="btn btn-info btn-block" id="dueOrdersbtn" onclick="GetDueOrders();">Load More <span class="glyphicon glyphicon-refresh"></span> </button>
+            <div class="row text-center" id="dueprogress">
+
+                <img src="~/Content/Images/Info.gif" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="list-group" id="paybleorderslist">
+                <div class="list-group-item list-group-item-success">
+                    <span class="pull-left">
+                        <span class="glyphicon glyphicon-hand-right"></span> Payble orders in next 10 days
+                    </span>
+                    <span class="pull-right">
+                       <strong id="paybleorders">0</strong> of <strong id="totalpaybleorders">0</strong>
+                    </span>
+                    <div class="clearfix"></div>
+                </div>
+                 
+            </div>
+            <button type="button" class="btn btn-success btn-block" id="paybleOrdersbtn" onclick="GetPaybleOrders();">Load More <span class="glyphicon glyphicon-refresh"></span> </button>
+            <div class="row text-center" id="paybleprogress">
+
+                <img src="~/Content/Images/Success.gif" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="list-group" id="beforeorderlist">
+                <div class="list-group-item list-group-item-danger">
+                    <span class="pull-left">
+                        <span class="glyphicon glyphicon-time"></span>  Payble orders before today
+                    </span>
+                    <span class="pull-right">
+                       <strong id="beforeorders">0</strong> of <strong id="totalbeforeorders">0</strong>
+                    </span>
+                    <div class="clearfix"></div>
+                </div>
+                
+            </div>
+            <button type="button" class="btn btn-danger btn-block" id="paybleBeforeOrdersbtn" onclick="GetPaybleOrdersBefore();">Show More <span class="glyphicon glyphicon-refresh"></span> </button>
+            <div class="row text-center" id="beforeprogress">
+
+                <img src="~/Content/Images/Danger.gif" />
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+
+@section Scripts{  
+    <script>
+
+        var TotalDueOrders = 0;
+        var OrderUrl = "@Url.Action("Details","Order")";
+        OrderUrl = OrderUrl + "/";
+
+        $(window).load(function () {
+            $('.date').datetimepicker({
+                defaultDate: new Date()
+            });
+
+
+            $('.date').on("dp.change", function (date) {
+            });
+
+
+
+
+            $(document).on('click', 'span.month, th.next, th.prev, th.switch, span.year', function (e) {
+
+                e.stopPropagation();
+            });
+
+            GetDashBoardData();
+
+
+        });
+
+        function GetDashBoardData() {
+            GetProductInfo();
+            GetCities();
+
+            GetDueOrdersCount();
+            GetPaybleOrdersCount();
+            GetPaybleOrdersBeforCount();
+           
+            GetDueOrders();
+            GetPaybleOrders();
+            GetPaybleOrdersBefore();
+            
+        }
+
+        //Get Due Orders
+        var DueOrdersToSkip = 0;
+        var DueOrdersCount = 0;
+        function GetDueOrders() {
+            $("#dueOrdersbtn").hide();
+            $("#dueprogress").show();
+            var DueOrderUrl = "@Url.Action("DueOrders", "api/DashBoard")";
+
+
+            $.ajax({
+                url: DueOrderUrl+"/"+DueOrdersToSkip,
+                cache: false,
+                type: "GET",
+                success: function (data) {
+
+
+                    DueOrdersToSkip += 10;
+
+                    $.each(data,function (i,item) {
+
+
+
+                        var li = `<a class="list-group-item" href="` + OrderUrl + item.OrderId +`" target="_blank" >
+                        <span class="pull-left">`+ item.CustomerName + ` <small class="text-dark">` + item.CityName+`</small> </span>
+                        <span class="pull-right">
+                            <span class="badge">`+ item.DueAmount+`</span>
+                        </span>
+                        <div class="clearfix"></div>
+                        </a>`;
+
+                        $("#dueorderslist").append(li);
+
+
+                    });
+                    DueOrdersCount += data.length;
+                    $("#dueorders").text(DueOrdersCount);
+
+                    if (data.length < 10) {
+                        $("#dueOrdersbtn").hide();
+                    }
+                    else {
+                        $("#dueOrdersbtn").show();
+                    }
+                },
+                error: function (reponse) {
+                    console.log(reponse);
+                    $("#dueorders").text("Error");
+                }
+            }).done(function () {
+
+                $("#dueprogress").hide();
+                });
+        }
+
+        //Get Payble Orders
+        var PaybleOrdersToSkip = 0;
+        var PaybleOrdersCount = 0;
+        function GetPaybleOrders() {
+            $("#paybleOrdersbtn").hide();
+            $("#paybleprogress").show();
+             var PayableOrderUrl = "@Url.Action("PaybleOrders", "api/DashBoard")";
+
+            $.ajax({
+                url: PayableOrderUrl + "/" + PaybleOrdersToSkip,
+                cache: false,
+                type: "GET",
+                success: function (data) {
+
+
+                    PaybleOrdersToSkip += 10;
+                    $.each(data, function (i, item) {
+
+
+                        var li = `<a class="list-group-item" href="` + OrderUrl + item.OrderId + `" target="_blank">
+                        <span class="pull-left">`+ item.CustomerName + ` <small class="text-dark">` + item.CityName + `</small> </span>
+                        <span class="pull-right">
+                            <span class="badge">`+ item.DueAmount + `</span>
+                        </span>
+                        <div class="clearfix"></div>
+                        </a>`;
+
+                        $("#paybleorderslist").append(li);
+
+
+                    });
+
+                    PaybleOrdersCount += data.length;
+
+
+
+                    $("#paybleorders").text(PaybleOrdersCount);
+
+                    if (data.length < 10) {
+                        $("#paybleOrdersbtn").hide();
+                    }
+                    else {
+                        $("#paybleOrdersbtn").show();
+                    }
+                },
+                error: function (reponse) {
+                    $("#paybleorders").text("Error");
+
+                }
+            }).done(function () {
+
+                $("#paybleprogress").hide();
+                });
+        }
+
+        /// Get payble orders before today
+        var PaybleOrdersBeforeToSkip  = 0;
+        var PaybleOrdersBeforeCount = 0;
+        function GetPaybleOrdersBefore() {
+            $("#paybleBeforeOrdersbtn").hide();
+            $("#beforeprogress").show();
+            var PaybleOrdersBeforeUrl = "@Url.Action("PaybleOrdersBefore", "api/DashBoard")";
+
+            $.ajax({
+                url: PaybleOrdersBeforeUrl + "/" + PaybleOrdersBeforeToSkip,
+                cache: false,
+                type: "GET",
+                success: function (data) {
+
+
+                    PaybleOrdersBeforeToSkip += 10;
+
+                    $.each(data, function (i, item) {
+
+
+                        var li = `<a class="list-group-item" href="` + OrderUrl + item.OrderId + `" target="_blank">
+                        <span class="pull-left">`+ item.CustomerName + ` <small class="text-dark">` + item.CityName + `</small> </span>
+                        <span class="pull-right">
+                            <span class="badge">`+ item.DueAmount + `</span>
+                        </span>
+                        <div class="clearfix"></div>
+                        </a>`;
+
+                        $("#beforeorderlist").append(li);
+
+
+                    });
+
+                    PaybleOrdersBeforeCount += data.length;
+
+
+                    $("#beforeorders").text(PaybleOrdersBeforeCount);
+
+                    if (data.length < 10) {
+                        $("#paybleBeforeOrdersbtn").hide();
+                    }
+                    else {
+                        $("#paybleBeforeOrdersbtn").show();
+                    }
+
+                },
+                error: function (reponse) {
+
+                    $("#beforeorders").text("Error");
+
+                }
+            }).done(function () {
+
+                $("#beforeprogress").hide();
+                });
+
+        }
+
+        //set total Dueorders
+        function SetTotalDueOrders() {
+
+            $("#totaldueorderstile").text(TotalDueOrders);
+        }
+
+        //get products information
+        function GetProductInfo() {
+
+            var ProductsUrl = "@Url.Action("Products", "api/DashBoard")";
+
+            $.ajax({
+                url: ProductsUrl,
+                cache: false,
+                type: "GET",
+                success: function (data) {
+
+
+                    $("#quantity").text(data.TotalQuantity);
+                    $("#models").text(data.TotalModels);
+                    $("#categories").text(data.TotalCategories);
+                },
+                error: function (reponse) {
+                    $("#quantity").text("Error");
+                }
+            });
+        }
+
+        //get cities
+
+        function GetCities() {
+
+             var CityUrl = "@Url.Action("", "api/City")";
+
+            $.ajax({
+                url: CityUrl,
+                cache: false,
+                type: "GET",
+                success: function (data) {
+
+                    var InstallmentUrl = "@Url.Action("InstallmentByCity","Print")";
+                    InstallmentUrl = InstallmentUrl + "?cityid=";
+
+                    var options = '<option value="0">Select City</option>';
+
+                    var lis = '';
+                    $.each(data, function (i, item) {
+
+                        options += '<option value="'+item.Id+'">'+item.CityName+'</option>';;
+                        lis += '<li> <a href="'+InstallmentUrl+item.Id+'" target="_blank">'+item.CityName+'</a> </li>';
+
+
+
+
+                    });
+
+
+
+
+                    $("#cityid").html(options);
+                    $("#menu").html(lis);
+                },
+                error: function (reponse) {
+                    $("#cityid").html('<option value="0">Error</option>');
+                    $("#menu").html('<li>Error</li>');
+                }
+            });
+        }
+
+
+
+        ///Count Products
+
+
+        //DueOrdersCount
+
+        function GetPaybleOrdersCount() {
+
+            var DueOrdersCountUrl = "@Url.Action("PaybleOrdersCount", "api/DashBoard")";
+             $.ajax({
+                 url: DueOrdersCountUrl,
+                cache: false,
+                type: "GET",
+                success: function (data) {
+
+                    $("#paybleordertile").text(data);
+                    $("#totalpaybleorders").text(data);
+                    TotalDueOrders += parseInt(data);
+                    SetTotalDueOrders();
+                },
+                error: function (reponse) {
+                    $("#paybleordertile").text("Error");
+                    $("#totalpaybleorders").text("Error");
+                }
+            });
+        }
+
+        function GetPaybleOrdersBeforCount() {
+
+            var DueOrdersCountUrl = "@Url.Action("PaybleOrdersBeforCount", "api/DashBoard")";
+             $.ajax({
+                 url: DueOrdersCountUrl,
+                cache: false,
+                type: "GET",
+                success: function (data) {
+
+                    $("#payblebeforetile").text(data);
+                    $("#totalbeforeorders").text(data);
+                    TotalDueOrders += parseInt(data);
+                    SetTotalDueOrders();
+                },
+                error: function (reponse) {
+                    $("#payblebeforetile").text("Error");
+                    $("#totalbeforeorders").text("Error");
+                }
+            });
+        }
+
+        function GetDueOrdersCount() {
+
+            var DueOrdersCountUrl = "@Url.Action("DueOrdersCount", "api/DashBoard")";
+             $.ajax({
+                 url: DueOrdersCountUrl,
+                cache: false,
+                type: "GET",
+                success: function (data) { 
+                    TotalDueOrders += parseInt(data);
+
+                    $("#totaldueorders").text(data);
+                    SetTotalDueOrders();
+                },
+                error: function (reponse) {
+                    console.log(reponse);
+                    $("#totaldueorders").text("Error");
+                }
+            });
+        }
+    </script>
+}

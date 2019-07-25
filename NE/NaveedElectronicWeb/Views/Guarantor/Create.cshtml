@@ -1,0 +1,94 @@
+﻿@model NaveedElectronicWeb.NEModel.Guarantor
+
+
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Guarantor</h4>
+        <p>
+            <ul class="breadcrumb">
+                <li class="active">
+                    <strong>
+                        @Html.ActionLink("Back to List", "Index")
+                    </strong>
+                </li>
+            </ul>
+        </p>
+        <hr />
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong class="text-info">Customer</strong>
+                        <h3>@Model.Customer.CustomerName </h3>
+                        <h6> @Model.Customer.FatherName</h6>
+                        <span>
+                            <small>@Model.NIC</small>
+
+                        </span>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <br />
+                        <h6>@Model.Customer.City.CityName</h6>
+                        <small> @Model.Customer.PrimaryAddress</small>
+
+                    </div>
+                </div>
+            </li>
+        </ul>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model=>model.CustomerId) 
+        <div class="form-group">
+            @Html.LabelFor(model => model.GuarantorName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.GuarantorName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.GuarantorName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NIC, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NIC, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NIC, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Contact, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PrimaryAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PrimaryAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PrimaryAddress, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add" class="btn btn-info" />
+            </div>
+        </div>
+    </div>
+}
+ 
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $("#NIC").mask("99999-9999999-9");
+    </script>
+}

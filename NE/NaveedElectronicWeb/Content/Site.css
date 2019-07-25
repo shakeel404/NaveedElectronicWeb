@@ -1,0 +1,192 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+.text-dark{
+    color:darkgray !important;
+}
+.text-white {
+    color:white !important;
+}
+.active-inverse{
+    background-color:dimgrey !important;
+    color:white !important;
+}
+
+.border-top-0{
+    border-top:0 !important;
+    border-top-left-radius:0 !important;
+    border-top-right-radius:0 !important;
+}
+
+.close{
+    color:red  !important;
+    
+    margin-top:10px !important;
+}
+.finalizebtn{
+     
+    max-width:200px !important;
+    min-width:200px !important;
+}
+
+/*
+    Printing Styles
+
+    ///Teal #02588F 
+    Dark Pink #CC364F
+    orange #FF4000
+*/
+
+/*.netitle {
+    color: #02588F !important;
+}
+
+.icon-print:before {
+    color: #02588F !important;
+}
+
+.icon-print-inverse {
+    color: white !important;
+}
+
+@media print {
+    .icon-print:before {
+        color: #02588F !important;
+    }
+
+    icon-print-inverse {
+        color: white !important;
+    }
+}
+
+
+.tile {
+    background-color: #02588F !important;
+    height: 80px;
+    width: 50%;
+    color: white;
+}
+
+.tile {
+}
+
+@media print {
+
+    .tile {
+        width: 100%;
+    }
+}
+
+@media print{
+    footer {
+        page-break-after: always !important;
+    }
+    .print-summery {
+        page-break-before: always !important;
+    }
+}
+.money {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.table-header {
+    border: 1px !important;
+    border-style: solid !important;
+    border-color: #02588F !important;
+    border-width: 2px 0px 2px 0px !important;
+}
+
+.urdu-text {
+    font-family: 'Noto Nastaliq Urdu Draft', serif;
+}
+.action-btn{
+    width:130px !important;
+}
+.print-border {
+    border: 1px !important;
+    border-width: 1px !important;
+    border-color: #02588F !important;
+    border-style: solid !important;
+    padding:1px !important;
+    margin:1px !important;
+     border-radius:2px !important;
+}
+printbg {
+    
+    background-image: url('../Images/if_android_n_1175537 (2).png' ) !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-size:  cover !important;
+    color: white;
+}
+@media print {
+    * {
+        -webkit-print-color-adjust: exact !important; Chrome, Safari 
+       
+    }
+    @page{
+        margin:0 !important;
+    }
+}
+
+@media print {
+    html, body {
+        background-image:  url('../Images/NEF2.PNG') !important;
+        background-size:40px,40px !important; 
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 99%;
+        page-break-after: avoid;
+        page-break-before: avoid;
+        
+    }
+}
+
+.top-buttom{
+    width:150% !important;
+    margin-left:-50px !important;
+    height:40px !important;
+    background-color:orange !important;
+}
+
+@media print{
+
+   
+}
+.print-body{
+    margin:20px !important;
+}
+
+@media print {
+
+    .table,
+    .table tr, .table th,
+    .table td {
+        background-color: transparent !important;
+    }
+
+}
+
+    */

@@ -1,0 +1,417 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Print</title>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <style>
+
+        .print-page {
+            
+        }
+        .print-heading{
+            background-color:steelblue !important;
+            color:white !important;
+            font:inherit !important;
+            width:100% !important;
+            margin:0 !important;
+            padding:0 !important;
+
+        }
+        @media print{
+            @page {
+                size: A4 !important;
+                margin: 0 !important;
+            }
+
+            .print-heading {
+                /*width: 200% !important;
+                margin-left: -20px !important;
+                color: white !important;*/
+                font: inherit !important;
+            } 
+            .print-title-right {
+               
+                background-color: steelblue !important;
+                width: 80% !important;
+                /*margin-left: -20px !important;*/
+                color: white !important;
+                font: inherit !important;
+                border-bottom-right-radius:50px !important;
+                border-top-right-radius:50px !important;
+                height:50px !important;
+                padding-top:10px !important;
+            }
+            .print-title-empty {
+                
+                width: 80% !important;
+                margin-left: -20px !important;
+                color: white !important;
+                font: inherit !important; 
+                height: 50px !important;
+                padding-top: 10px !important;
+            }
+
+
+            .print-title-left {
+                background-color: steelblue !important;
+                width: 100% !important;
+                margin-left: -20px !important;
+                color: white !important;
+                font: inherit !important;
+                border-bottom-left-radius: 50px !important;
+                border-top-left-radius: 50px !important;
+                height: 50px !important;
+                padding-top: 10px !important;
+            }
+            .client-heading {
+                background-color: lightgray !important;
+                /*border-color: steelblue !important;
+                border-top: 0px !important;
+                border-left: 0px !important;
+                border-right: 0px !important;
+                border-bottom-width: 1px  !important;
+                border-style:solid !important;*/
+                width: 100% !important;
+                margin-left: 0px !important;
+                font: inherit !important;
+                /*border-bottom-right-radius: 50px !important;
+                border-top-right-radius: 50px !important;*/
+                
+                padding-top: 10px !important;
+                margin-top: 3px !important;
+            }
+            .client-empty {
+                background-color: transparent !important;
+                
+                width: 100% !important;
+                margin-left: 0px !important;
+                font: inherit !important; 
+                padding-top: 10px !important;
+                margin-top: 3px !important;
+            }
+            .print-title-empty > h1, .print-title-empty > h2, .print-title-empty > h3, .print-title-empty > h4, .print-title-empty > small, .print-title-empty > h1 > strong, .print-title-empty > h2 > strong, .print-title-empty > h3 > strong, .print-title-empty > h4 > strong {
+                color: steelblue !important;
+                padding-bottom: 5px !important;
+                padding-top: 5px !important;
+            }
+
+            .client-heading > h1, .client-heading > h2, .client-heading > h3, .client-heading > h4, .client-heading > small, .client-heading > h1 > strong, .client-heading > h2 > strong, .client-heading > h3 > strong, .client-heading > h4 > strong, .client-heading > h1 > small, .client-heading > h2 > small, .client-heading > h3 > small, .client-heading > h4 > small {
+                color: steelblue !important;
+                padding-bottom: 5px !important;
+                padding-top: 5px !important;
+            }
+            .client-empty > h1, .client-empty > h2, .client-empty > h3, .client-empty > h4, .client-empty > small, .client-empty > strong, .client-empty > h1 > strong, .client-empty > h2 > strong .client-empty > h3 > strong .client-empty > h4 strong {
+                color: steelblue !important;
+                padding-bottom: 5px !important;
+                padding-top: 5px !important;
+            }
+            .tri {
+                display: inline !important;
+                width: 0px;
+                height: 0px;
+                background-color: blue;
+                border-top: 40px solid red;
+                border-bottom: 40px solid green;
+                border-left: 40px solid black;
+                border-right: 40px solid indigo;
+            }
+            .text-left{
+                padding-left:20px !important;
+                
+            }
+
+            .icon-empty:before {
+                color: steelblue !important;
+                padding-bottom: 10px !important;
+                padding-top: 10px !important;
+            }
+            .icon:before {
+                color: white !important;
+                padding-bottom: 10px !important;
+                padding-top: 10px !important;
+            }
+            .icon-client:before {
+                color: cadetblue !important;
+               
+            }
+            h1 ,h2,h3,h4,small{
+
+                color: white !important;
+                padding-bottom: 10px !important;
+                padding-top: 10px !important;
+            }
+            html,body,h1,h2,h3,h4,h5,h6{
+                margin:0 !important;
+                padding:0 !important;
+               
+            }
+            h1{
+                font-size:50px !important;
+            }
+
+            .orange {
+                background-color: darkorange !important;
+            }
+            th {
+              
+                color: white !important;
+            }
+
+            .table td {
+                background-color: #bbccdb !important;
+                color:#333 !important;
+            }
+            .table th {
+                background-color: cadetblue !important;
+            } 
+
+            .trad{
+                color:darkred !important;
+            }
+
+        }
+
+    </style>
+</head>
+<body>
+    <div class="print-page">
+       
+
+        <div class="col-xs-12">
+           
+           <div class="print-heading">
+               
+               <h1 class="text-center">I N V O I C E</h1>
+               
+           </div>
+        </div>
+
+        <div class="col-xs-12">
+            <br />
+           <div class="print-title-right text-left">
+               <h2>
+                   <span class="glyphicon glyphicon-leaf icon"></span> Naveed Electronics
+                   <small>Bagh Dehrai Road Matta Swat </small>
+               
+               
+               </h2> 
+           </div>
+              
+            <div class="print-title-empty text-left">
+                <h4>
+                <span class="glyphicon glyphicon-phone-alt icon-empty"></span> 0946-795569
+                    &nbsp;
+                    <span class="glyphicon glyphicon-phone icon-empty"></span> 0345-945-1182
+                    &nbsp;<span class="glyphicon glyphicon-phone icon-empty"></span> 0313-808-0788
+                </h4>
+
+                
+               
+            </div>
+             
+        </div>
+
+        <div class="col-xs-12">
+            <br />
+            <div class="col-xs-6">
+                <div class="client-empty text-left">
+                    <h3>
+                        Supplier
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                    <span class="glyphicon glyphicon-user icon-client"></span>
+                    <small>Muhamamd Shakeel</small></h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-home icon-client"></span>
+                        <small>Udhyana Pvt Ltd</small>
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-map-marker icon-client"></span>
+                        <small>Nawakaly Mingora swat</small>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="col-xs-6 text-right">
+                <div class="client-empty text-left">
+                    <h3> Bill To
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-user icon-client"></span>
+                        <small>Muhammad Riaz Amir</small>
+                    </h3>
+                </div>
+                <div class="client-empty text-left">
+                    <h3>
+                        Total Dues
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-share-alt icon-client"></span>
+                      <small> PKR</small> 295844<small>.00</small>
+                    </h3>
+                </div>
+            </div>
+
+        </div> 
+       
+        <div class="col-xs-12">
+            <br />
+            <table class=" table table-striped">
+                <tr class="info">
+                    <th >S.No</th>
+                    <th >Category</th>
+                    <th >Model</th>
+                    <th class="text-center">Purchase Price</th>
+                    <th class="text-center">Quantity</th>
+                    <th class="text-center">Total</th>
+                </tr>
+                
+                <tr>
+
+                    <td>1</td>
+                    <td>Category Name</td>
+                    <td>Model</td>
+                    <td class="text-center">Purchase Price</td>
+                    <td class="text-center">Quantity</td>
+                    <td class="text-center">
+                         Total
+                    </td>
+                </tr>
+                <tr>
+
+                    <td>2</td>
+                    <td>Category Name</td>
+                    <td>Model</td>
+                    <td class="text-center">Purchase Price</td>
+                    <td class="text-center">Quantity</td>
+                    <td class="text-center">
+                        Total
+                    </td>
+                </tr>
+                <tr>
+
+                    <td>3</td>
+                    <td>Category Name</td>
+                    <td>Model</td>
+                    <td class="text-center">Purchase Price</td>
+                    <td class="text-center">Quantity</td>
+                    <td class="text-center">
+                        Total
+                    </td>
+                </tr>
+                <tr>
+
+                    <td>4</td>
+                    <td>Category Name</td>
+                    <td>Model</td>
+                    <td class="text-center">Purchase Price</td>
+                    <td class="text-center">Quantity</td>
+                    <td class="text-center">
+                        Total
+                    </td>
+                </tr>
+                <tr>
+
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th class="text-center">Total</th>
+                    <th class="text-center">29</th>
+                    <th class="text-center">
+                       200
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-12">
+            <div class="col-xs-6">
+                <div class="client-empty text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-share-alt icon-client"></span>
+                        Payments
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+           <div class="col-xs-6">
+               <table class=" table table-striped">
+                   <tr class="info">
+                       <th>S.No</th>
+                       <th>Date</th>
+                       <th class="text-center">Payment</th>
+                   </tr>
+
+                   <tr>
+
+                       <td>1</td>
+                       <td>Mon 22 Jan 2017</td>
+                       <td class="text-center">2000</td>
+                   </tr>
+                   <tr>
+
+                       <td>2</td>
+                       <td>Mon 22 Jan 2017</td>
+                       <td class="text-center">2000</td>
+                   </tr>
+                   <tr>
+
+                       <td>3</td>
+                       <td>Mon 22 Jan 2017</td>
+                       <td class="text-center">2000</td>
+                   </tr>
+                   <tr>
+
+                       <td>4</td>
+                       <td>Mon 22 Jan 2017</td>
+                       <td class="text-center">2000</td>
+                   </tr>
+                   <tr>
+
+                       <td>5</td>
+                       <td>Mon 22 Jan 2017</td>
+                       <td class="text-center">2000</td>
+                   </tr>
+                   <tr class="info">
+                       <th></th>
+                       <th>Total</th>
+                       <th class="text-center"><small>PKR</small> 6000 <small>.00</small> </th>
+                   </tr>
+               </table>
+           </div>
+          
+        </div>
+
+    </div>
+    <button class="btn btn-info hidden-print" onclick="Print()">Print</button>
+    <footer>
+        <div class="col-xs-12">
+            <div class="col-xs-6">
+                <span class="glyphicon glyphicon-copyright-mark icon-empty"></span> <span class="trad">2017</span> &nbsp; <span class="glyphicon glyphicon-leaf icon-empty"></span> &nbsp;<span class="trad">Naveed Electronics</span>
+            </div>
+            <div class="col-xs-6 text-right">
+                <span class="glyphicon glyphicon-star icon-empty"></span><span class="trad"> Powerd by Udhyana</span> <span class="glyphicon glyphicon-phone icon-empty"></span><span class="trad"> 0346-947-6404</span>
+            </div>
+        </div>
+    </footer>
+</body>
+
+
+</html>
+<script>
+
+    function Print() {
+        window.print();
+    }
+</script>

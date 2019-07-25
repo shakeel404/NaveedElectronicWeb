@@ -1,0 +1,32 @@
+﻿@model IEnumerable<NaveedElectronicWeb.NEModel.City>
+
+
+<table class="table">
+    <tr>
+        <th>
+           City Name
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+        <h5>@Html.DisplayFor(modelItem => item.CityName) <small> @item.Customers.Count Customers</small> </h5>
+        </td>
+       
+        <td>
+            @if (item.Id == 1)
+            {
+                <p>Default City For Customers</p>
+            }
+            else
+            {
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "text-danger" })
+            }
+                
+        </td>
+    </tr>
+}
+
+</table>

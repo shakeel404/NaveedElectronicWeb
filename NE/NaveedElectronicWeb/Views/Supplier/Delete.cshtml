@@ -1,0 +1,78 @@
+﻿@model NaveedElectronicWeb.NEModel.Supplier
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Supplier</h4>
+
+    <div>
+        <ol class="breadcrumb">
+            <li class="active">
+                <strong>
+
+
+                    @Html.ActionLink("Back to List", "Index")
+                </strong>
+            </li>
+            <li class="active">
+                @Html.ActionLink("Details", "Details", new { id = Model.Id })
+            </li>
+            <li class="active">
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+            </li>
+        </ol>
+    </div>
+    <hr />
+    <ul class="list-group">
+        <li class="list-group-item">
+            <h3>@Model.SupplierName </h3>
+            <span>
+                <strong>@Model.Company</strong>
+                <small> @Model.PrimaryAddress</small>
+            </span>
+            @{
+                int totalsupplies = Model.Supplies.Count;
+                int itemsshiped = Model.Supplies.Sum(sp => sp.SupplyDetails.Sum(spd => spd.Quantity));
+                int netamount = Model.Supplies.Sum(sp => sp.SupplyDetails.Sum(spd => spd.Quantity * spd.PurchasePrice));
+                int totalpaid = Model.Supplies.Sum(sp => sp.SupplyPayments.Sum(spp => spp.AmountPaid));
+                int dues = netamount - totalpaid;
+            }
+        </li>
+
+        <li class="list-group-item list-group-item-success">
+            <div class="row">
+                <div class="col-md-3">
+                    <small class="text-info">Total Supplies</small> <br />
+                    <strong>@totalsupplies</strong>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-info">Total Items Shiped</small><br />
+                    <strong>@itemsshiped</strong>
+                </div>
+                <div class="col-md-2">
+                    <small class="text-info">Net Amount</small> <br />
+                    <strong>@netamount</strong>
+                </div>
+                <div class="col-md-2">
+                    <small class="text-info">Total Paid</small><br />
+                    <strong>@totalpaid</strong>
+                </div>
+                <div class="col-md-2">
+                    <small class="text-info">Total Dues</small><br />
+                    <strong>@dues</strong>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+
+     
+    
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> 
+            
+        </div>
+    }
+</div> 

@@ -1,0 +1,81 @@
+  function FinilizeOrder() {
+        var Products =[];
+        var customerId = $("Id").val();
+        $(".cart-product").each(function () {
+            Products.push($(this).data());
+ 
+        })
+        console.log(Products);
+
+        var parent = $("#parent");
+        var customer = $("#customer").clone();
+        var itemsrow = '<div id="itemsrow" class="row">  <form method="post" action="/Order/Create"> <ul class="list-group" >';
+         
+           
+        $.each(Products, function (index,data) {
+
+            var product = data;
+
+            var li =  `<li class="list-group-item">
+                <div class="row" >
+                    <div class="col-md-2">
+                        <small class="text-info">Category</small><br />
+                        <small>`+ product.CategoryName +`</small>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="hidden" value="`+product.ProductId+`" id="ProductId" name="ProductId" />
+                        <small class="text-info">Model</small><br />
+                        <small>`+ product.Model +`</small>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <input type="hidden" value="Quantity" id="Quantity" name="Quantity" />
+                        <small class="text-info" >Quantity</small><br />
+                        <small class="quantity">`+ product.Quantity +`</small>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <input type="hidden" value="Price" id="SalePrice" name="Price" />
+                        <small class="text-info">Price</small><br />
+                        <small class="quantity">`+ product.SalePrice +`</small>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <small class="text-info">Tatal</small><br />
+                        <small>`+ (product.Quantity * product.SalePrice)+`</small>
+                    </div>
+                    <div class="col-md-2">
+
+                        <small class="text-info">Discount</small><br />
+                        <input min="0" max="999999999" class="form-control discount" type="number" value="0" id="Disount" name="Discount" placeholder="Discount" />
+                    </div>
+                    <div class="col-md-1 text-center">
+
+                        <small class="text-info">Net Total</small><br />
+                        <small id="nettotal">`+ (product.Quantity * product.SalePrice) +`</small><br />
+                    </div>
+                </div >
+            </li >`;
+
+            itemsrow += li;
+        }); 
+
+        var footerli = `<li class="list-group-item active-inverse">
+                <div class="row" >
+                    <div class="col-md-8">
+                        <input type="submit" id="finishbtn" class="btn btn-success finalizebtn" value="Finalize Order" />
+                    </div>
+                    <div class="col-md-2 text-center">
+
+                       <small class="text-white">Net Quantity</small><br />
+                        <small id="nettotal">`+ TotalItems+`</small><br />
+                    </div>
+                    <div class="col-md-2 text-center">
+
+                        <small class="text-white">Grand Total</small><br />
+                        <small id="nettotal">`+ NetTotal + `</small><br />
+                    </div>
+                </div >
+            </li >`;
+        itemsrow += footerli;
+        itemsrow +=" </form> </div>"
+        parent.html(customer);
+        $(parent).append(itemsrow);
+    }

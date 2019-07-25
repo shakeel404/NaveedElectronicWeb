@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0c84a3dcdfce4ddc9ad30857e8a3f61d" Name="Diagram1">
+        <EntityTypeShape EntityType="NEDataBaseModel.Category" Width="1.5" PointX="5.25" PointY="16" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.City" Width="1.5" PointX="0.75" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.Customer" Width="1.5" PointX="3" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.CustomerContact" Width="1.5" PointX="5.25" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.CustomerOrder" Width="1.5" PointX="7.5" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.Guarantor" Width="1.5" PointX="5.25" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.OrderDetail" Width="1.5" PointX="9.75" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.OrderPayment" Width="1.5" PointX="9.75" PointY="12.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.Product" Width="1.5" PointX="7.5" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.Supplier" Width="1.5" PointX="11.75" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.SupplierAccount" Width="1.5" PointX="14" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.SupplierContact" Width="1.5" PointX="14" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.Supply" Width="1.5" PointX="14" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.SupplyDetail" Width="1.5" PointX="16.25" PointY="14.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="NEDataBaseModel.SupplyPayment" Width="1.5" PointX="16.25" PointY="11.5" IsExpanded="true" />
+        <AssociationConnector Association="NEDataBaseModel.FK__Product__Categor__4EDDB18F" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__Customer__CityId__22FF2F51" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__CustomerC__Custo__25DB9BFC" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__CustomerO__Custo__436BFEE3" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__Guarantor__Custo__408F9238" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__CustomerO__Guara__45544755" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__OrderDeta__Order__51BA1E3A" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__OrderPaym__Order__5E1FF51F" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__OrderDeta__Produ__52AE4273" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__SupplyDet__Produ__6E565CE8" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__SupplierA__Suppl__63D8CE75" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__SupplierC__Suppl__66B53B20" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__Supply__Supplier__6991A7CB" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__SupplyDet__Suppl__6D6238AF" ManuallyRouted="false" />
+        <AssociationConnector Association="NEDataBaseModel.FK__SupplyPay__Suppl__75035A77" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="NEDataBaseModel.AspNetUser" Width="1.5" PointX="2.25" PointY="10.375" />
+        <AssociationConnector Association="NEDataBaseModel.FK__CustomerO__UserI__4460231C" />
+        <AssociationConnector Association="NEDataBaseModel.FK__OrderPaym__UserI__5F141958" />
+        <AssociationConnector Association="NEDataBaseModel.FK__Supply__UserId__6A85CC04" />
+        <AssociationConnector Association="NEDataBaseModel.FK__SupplyPay__UserI__75F77EB0" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

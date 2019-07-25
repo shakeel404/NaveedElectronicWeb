@@ -1,0 +1,100 @@
+﻿@model NaveedElectronicWeb.NEModel.SupplierAccount
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model=>model.SupplierId)
+    <div class="form-horizontal">
+        <h4>Supplier Account</h4>
+
+        <div>
+
+
+
+            <ol class="breadcrumb">
+                <li class="active">
+                    <strong>
+                        @Html.ActionLink("Back to List", "Index")
+                    </strong>
+                </li>
+                <li class="active">
+                    @Html.ActionLink("Details", "Details", new { id = Model.SupplierId })
+                </li>
+
+            </ol>
+
+        </div>
+        <hr /> 
+        <ul class="list-group">
+            <li class="list-group-item">
+                <h3>@Model.Supplier.SupplierName </h3>
+                <span>
+                    <strong>@Model.Supplier.Company</strong>
+                    <small> @Model.Supplier.PrimaryAddress</small>
+                </span>
+                @{
+                    int totalsupplies = Model.Supplier.Supplies.Count;
+                    int itemsshiped = Model.Supplier.Supplies.Sum(sp => sp.SupplyDetails.Sum(spd => spd.Quantity));
+                    int netamount = Model.Supplier.Supplies.Sum(sp => sp.SupplyDetails.Sum(spd => spd.Quantity * spd.PurchasePrice));
+                    int totalpaid = Model.Supplier.Supplies.Sum(sp => sp.SupplyPayments.Sum(spp => spp.AmountPaid));
+                    int dues = netamount - totalpaid;
+                }
+            </li>
+
+            <li class="list-group-item list-group-item-success">
+                <div class="row">
+                    <div class="col-md-3">
+                        <small class="text-info">Total Supplies</small> <br />
+                        <strong>@totalsupplies</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <small class="text-info">Total Items Shiped</small><br />
+                        <strong>@itemsshiped</strong>
+                    </div>
+                    <div class="col-md-2">
+                        <small class="text-info">Net Amount</small> <br />
+                        <strong>@netamount</strong>
+                    </div>
+                    <div class="col-md-2">
+                        <small class="text-info">Total Paid</small><br />
+                        <strong>@totalpaid</strong>
+                    </div>
+                    <div class="col-md-2">
+                        <small class="text-info">Total Dues</small><br />
+                        <strong>@dues</strong>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <br />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.AccountTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AccountTitle, new { htmlAttributes = new { @class = "form-control", placeholder = "Account title" } })
+                @Html.ValidationMessageFor(model => model.AccountTitle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AccountNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AccountNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "Account number" } })
+                @Html.ValidationMessageFor(model => model.AccountNumber, "", new { @class = "text-danger" })
+            </div>
+        </div> 
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add" class="btn btn-info" />
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

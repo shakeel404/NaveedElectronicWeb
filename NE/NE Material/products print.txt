@@ -1,0 +1,114 @@
+@{
+    var product = Model.FirstOrDefault();
+
+    NaveedElectronicWeb.NEModel.Category category = null;
+
+    if (product != null)
+    {
+        category = product.Category;
+    }
+
+    string categoryname = " Not Found";
+
+    if (category != null)
+    {
+        categoryname = category.CategoryName;
+    }
+
+    
+        NaveedElectronicWeb.NEModel.NEDataBaseEntities db = new NaveedElectronicWeb.NEModel.NEDataBaseEntities();
+
+        var products = db.Products.Where(p => p.CategoryId == category.Id);
+    
+}
+
+<div class="visible-print"> 
+        <div class="row">
+            <div id="PrintDiv">
+
+                <div class="row">
+                     <div class="col-xs-5">
+
+                        <h2 class="netitle"><span class="glyphicon glyphicon-leaf icon-print"></span> Naveed Electronics</h2>
+
+                        <h5><span class="glyphicon glyphicon-map-marker icon-print"></span><strong> &nbsp;&nbsp; Bara Drurush Khela Matta Swat</strong></h5>
+                        <h5><span class="glyphicon glyphicon-phone-alt icon-print"></span><strong>&nbsp;&nbsp; 0946-795569</strong></h5>
+                        <h5><span class="glyphicon glyphicon-phone icon-print"></span><strong>&nbsp;&nbsp; 0345-945-1182</strong></h5>
+                        <h5><span class="glyphicon glyphicon-phone icon-print"></span><strong>&nbsp;&nbsp; 0313-808-0788</strong></h5>
+
+                        <h6><span class="glyphicon glyphicon-user icon-print"></span> <strong>&nbsp; Muhammad Riaz Amir </strong> </h6>
+
+                    </div>
+                    <div class="col-xs-2">
+
+
+                    </div>
+                    <div class="col-xs-5">
+
+                       <h3><span class="glyphicon glyphicon-gift netitle"></span> &nbsp; @categoryname</h3>
+                        <h3> <span class="glyphicon glyphicon-th netitle"></span> &nbsp; @Model.Count Products </h3>
+                    </div>
+
+                   <div id="items" class="row">
+                       <div class="table-responsive-md">
+
+
+                           <table class="table">
+                               <tr class="table-header">
+                                   <th class="text-center netitle">&nbsp;</th>
+                                   <th class="text-center netitle"><small class="netitle">S.No</small></th>
+                                   <th  ><small class="netitle">Model</small></th>
+                                   <th class="text-center "><small class="netitle">Qty</small></th>
+                                   <th class="text-center "><small class="netitle">Purchse</small></th>
+                                   <th class="text-center "><small class="netitle">Sale</small></th>
+                                   <th class="text-center "><small class="netitle">Installment</small></th>
+                                   <th class="text-center "><small class="netitle">First</small></th>
+                                   <th class="text-center "><small class="netitle">Monthly</small></th>
+                                   <th class="text-center "><small class="netitle">Months</small></th>
+                                   <th class="text-center "><small class="netitle">G/W</small></th>
+                               </tr>
+                               @{
+                               int row = 1;
+                               }
+                               @foreach(var item in products)
+                           {
+                                   <tr>
+                                       <td>&nbsp;</td>
+                                       <td>@row</td>
+                                       <td>@item.Model</td>
+                                       <td class="text-center"><small>@item.Quantity</small></td>
+                                       <td class="text-center"><small>@item.PurchasePrice</small></td>
+                                       <td class="text-center"><small>@item.SalePrice</small></td>
+                                       <td class="text-center"><small>@item.InstallmentPrice</small></td>
+                                       <td class="text-center"><small>@item.FirstPayment</small></td>
+                                       <td class="text-center"><small>@item.MonthlyPayment</small></td>
+                                       <td class="text-center"><small>@item.NoOfMonths</small></td>
+                                       <td class="text-left urdu-text"><small>@item.GuaranteeWarranty</small></td>
+                                   </tr>
+                               row++;
+                           }
+                           </table>
+                       </div>
+                   </div>
+
+                    <div class="row print-summery" >
+                        <div class="col-xs-3">
+
+                        </div>
+                        <div class="col-xs-6">
+                           <h2 class="netitle">Summery</h2>
+                        </div>
+                        <div class="col-xs-3">
+
+                        </div>
+                    </div>
+                                </div>
+                                <p>
+                                    Date Printed: @DateTime.Now.ToString("dd MMM yyyy")
+                                </p>
+
+                            </div>
+                        </div>
+                 
+
+</div>

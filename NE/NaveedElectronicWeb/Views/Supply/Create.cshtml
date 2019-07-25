@@ -1,0 +1,415 @@
+﻿@model NaveedElectronicWeb.NEModel.Supplier
+
+<style>
+    .combo {
+        width: 50% !important;
+    }
+
+    .full {
+        max-width: 100% !important;
+    }
+
+    .panel-btn {
+        border-radius: 0px !important;
+    }
+</style>
+ 
+
+<div id="parent" class="row">
+
+    <div id="leftpane" class="col-md-6">
+
+        <div class="panel panel-info">
+            <div class="panel-heading">Product</div>
+            <div class="panel-body">
+                <div class="row ">
+                    <div class="col-md-6   ">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="CategorySelect" id="CategorySelect" onchange="GetProducts($(this).val())" class="form-control" data-val-required="Please select a category." data-val-range="Please select a category" data-val-range-max="10000000" data-val-range-min="1" data-val="true" placeholder="Select Category"></select>
+                            <span class="text-danger field-validation-valid" data-valmsg-for="CategorySelect" data-valmsg-replace="true"></span>
+
+                            <label>Model</label>
+                            <select name="ModelSelect" id="ModelSelect"   class="form-control " data-val-required="Please select a Model." data-val-range="Please select a Model" data-val-range-max="10000000" data-val-range-min="1" data-val="true" placeholder="Select Model"></select>
+                            <span class="text-danger field-validation-valid" data-valmsg-for="ModelSelect" data-valmsg-replace="true"></span>
+
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="text" id="Quantity" placeholder="Quantity" class="form-control"   />
+                            <label>Price</label>
+                            <input type="text" id="PurchasePrice" placeholder="Purchase Price" class="form-control"   />
+                        </div>
+
+                    </div>
+                </div>
+               <div class="row" id="addbtn">
+                   <button type="button" class="btn btn-primary btn-block" onclick="AddItem()" >Add <span class="glyphicon glyphicon-shopping-cart"></span></button>
+               </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <div id="rightpane" class=" col-md-6">
+        <div class="row">
+
+            <div class="panel panel-info">
+                <div class="panel-heading"> Customer </div>
+                <div class="panel-body">
+
+
+                    <h4>
+                       
+                            <span class="label label-primary">New Supply</span> 
+                        
+                    </h4>
+
+
+
+                    <div class="row">
+
+
+
+                        @Html.HiddenFor(model => model.Id)
+                        <h3>&nbsp;&nbsp;@Model.SupplierName <small> @Model.Company @Model.PrimaryAddress</small> </h3>
+                        
+
+
+
+
+
+
+
+                    </div>
+                    @{
+                        int TotalSupplies = Model.Supplies.Count;
+                        int TotalProducts = Model.Supplies.Sum(s => s.SupplyDetails.Sum(spd => spd.Quantity));
+                        int NetTotal = Model.Supplies.Sum(s => s.SupplyDetails.Sum(spd => (spd.PurchasePrice * spd.Quantity)));
+                        int TotalPayment = Model.Supplies.Sum(s => s.SupplyPayments.Sum(spd => spd.AmountPaid));
+                        int TotalDues = NetTotal - TotalPayment;
+                    }
+                    <div class="row bg-warning">
+                        <div class="col-md-2">
+                            <small class="text-info">Supplies</small> <br />
+                            <strong>@TotalSupplies</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-info"> Products</small><br />
+                            <strong>@TotalProducts </strong>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-info">Total</small> <br />
+                            <strong>@NetTotal</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-info"> Payment</small><br />
+                            <strong>@TotalPayment</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-info"> Dues</small><br />
+                            <strong>@TotalDues</strong>
+                        </div>
+                        <div class="col-md-2">
+
+
+                        </div>
+                    </div>
+                    <div class="row">&nbsp;</div>
+                    <div class="row">
+                        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                            @Html.ActionLink("Cancel Order", "Index", "Supplier", null, new { @class = "btn btn-warning panel-btn" })
+                           
+                            @Html.ActionLink("Details", "Details", "Supplier", new { id = Model.Id }, new { @class = "btn btn-success panel-btn" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+ 
+@using (Html.BeginForm())
+{
+    Html.AntiForgeryToken();
+
+    <div class="row">
+        <table class="table table-striped" id="tablecart">
+            <tr>
+                <th>Product</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-center">Price</th> 
+                <th class="text-center">Net Total</th>
+                <th class="text-center"></th>
+            </tr>
+        </table>
+    </div>
+    <div class="row" id="TotalsPane">
+
+        <div class="col-md-6">
+
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading">Total</div>
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="form-group">
+
+                            <div class="input-group">
+                                <span class="input-group-addon">Grand Total</span>
+                                <input id="grandtotal" class="form-control" type="number" placeholder="Grand Total" disabled="disabled" />
+                                <span class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;Quantity</span>
+                                <input id="grandquantity" class="form-control" type="number" placeholder="Grand Quantity" disabled="disabled" />
+                            </div>
+
+                        </div>
+
+                    </div>
+                     
+                    <div class="row text-center">
+
+                        <button class="btn btn-success btn-lg btn-block panel-btn" type="submit">Finalize <span class="glyphicon glyphicon-ok"></span></button>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script>
+
+    var GrandTotal = 0;
+    var TotalItems = 0;
+    var Index = 0; 
+    $(window).load(function () {
+
+
+        var today = new Date();
+
+        var day = today.getDay();
+        var month = today.getMonth();
+        var year = today.getFullYear();
+
+        if (day > 20)
+        {
+            month += 2;
+            day = 5;
+
+            if (month > 12) {
+
+                if (month > 13) {
+                    month = 2;
+                }
+                else {
+                    month = 1;
+
+                }
+
+                year++;
+
+            }
+        }
+        else {
+            month += 1;
+            day = 5;
+
+            if (month > 12) {
+
+                if (month > 13) {
+                    month = 2;
+                }
+                else {
+                    month = 1;
+
+                }
+
+                year++;
+
+            }
+        }
+
+
+        GetCategories();
+
+        SetGrandTotal();
+    });
+
+
+
+
+    var supplierId = $("#Id").val();
+    var apiurl = "@Url.Action("","api/Product")";
+
+
+
+
+
+
+
+    function GetCategories() {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#CategorySelect").html(procemessage).show();
+
+
+        $.ajax({
+            url: apiurl,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var markup = "<option value='0'>Select Category</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].Id + ">" + data[x].CategoryName + "</option>";
+
+                }
+                $("#CategorySelect").html(markup).show();
+            },
+            error: function (reponse) {
+                alert("Category error : " + reponse);
+            }
+        });
+    }
+
+    function GetProducts(catid) {
+        $("#PurchasePrice").val(0);
+        $("#Quantity").val(0) 
+        if (catid == 0) {
+
+            $("#ModelSelect").html("<option value='0'>Select Model</option>").show();
+            return false;
+        }
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#ModelSelect").html(procemessage).show();
+
+        $.ajax({
+            url: apiurl,
+            data: { id: catid },
+            cache: false,
+            type: "GET",
+            success: function (data) {
+                var markup = "<option value='0'>Select Model</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].Id + ">" + data[x].Model + "</option>";
+                }
+                $("#ModelSelect").html(markup).show();
+            },
+            error: function (reponse) {
+                alert("Products error : " + reponse);
+            }
+        });
+    }
+
+
+
+
+
+     
+    function SetGrandTotal() {
+
+        $("#grandtotal").val(GrandTotal);
+        $("#grandquantity").val(TotalItems);
+        if (GrandTotal > 0) {
+
+            $("#TotalsPane").show();
+        }
+        else {
+            $("#TotalsPane").hide();
+        }
+    }
+    function AddItem() {
+
+
+        var tablecart = $("#tablecart");
+
+        var category = $("#CategorySelect :selected").text();
+        var model = $("#ModelSelect :selected").text();
+        var productid = parseInt( $("#ModelSelect :selected").val());
+        var quantity = parseInt($("#Quantity").val());
+        var price = parseInt($("#PurchasePrice").val());
+
+        if (!(quantity > 0 && price > 0 && productid > 0))
+            return;
+
+        var nettotal = quantity * price;
+
+
+
+
+        var clas = "product" + productid;
+
+
+
+        var row = `<tr class="`+clas+`">
+            <td class="product">`+ category + ` ` + model +` <input type="hidden" name="Details[].ProductId" value="`+productid+`" /> </td>
+            <td class="text-center quantity">`+ quantity +`<input type="hidden" name="Details[].Quantity" value="`+quantity+`" /></td>
+            <td class="text-center price">`+ price +`<input type="hidden" name="Details[].Price" value="`+price+`" /></td>
+            <td class="text-center nettotal">`+ nettotal +`</td>
+     <td class="text-center"><button class="btn   btn-link " onclick="RemoveItem(this)"><span class="glyphicon glyphicon-remove "></span></button></td>
+        </tr>`;
+
+
+        tablecart.append(row);
+
+        GrandTotal += nettotal;
+        TotalItems += quantity;
+        IndexRows(); 
+        SetGrandTotal();
+    }
+    function RemoveItem(row) {
+
+
+        var catid = $("#CategorySelect :selected").val();
+        GetProducts(catid);
+
+        var quantity = parseInt($(row).parents("tr").find(".quantity").text());
+        var nettotal = parseInt($(row).parents("tr").find(".nettotal").text());
+        GrandTotal -= nettotal;
+        TotalItems -= quantity;
+        $(row).parents("tr").remove();
+
+        IndexRows();
+
+        SetGrandTotal();
+
+    }
+
+    function IndexRows() {
+
+        $("tr").each(function (i, row) {
+
+
+            var index = i - 1;
+            var indexed = "[" + index + "]";
+
+            var rawhtml = row.innerHTML;
+
+
+            rawhtml = rawhtml.replace(/\[.*?\]\s?/g, indexed);
+            $(row).html(rawhtml);
+
+
+
+
+        });
+    }
+
+    </script>
+}
+

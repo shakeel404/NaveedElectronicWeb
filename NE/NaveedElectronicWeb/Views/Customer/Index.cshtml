@@ -1,0 +1,411 @@
+﻿@model PagedList.IPagedList<NaveedElectronicWeb.NEModel.Customer>
+@using PagedList.Mvc;
+
+@{ 
+    List<NaveedElectronicWeb.NEModel.City> Cities = ViewBag.Cities;
+
+   
+}
+<br />
+<p>
+   <ul class="breadcrumb">
+       <li class="active">
+           <strong>
+               @Html.ActionLink("Add New", "Create")
+           </strong>
+       </li>
+      
+       <li role="presentation" class="dropdown">
+           <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+               Filter by City <span class="caret"></span>
+           </a>
+           <ul class="dropdown-menu">
+                
+               @foreach (var city in Cities)
+               {
+                <li>@Html.ActionLink(city.CityName, "Index",new {page=1, cityid=city.Id})</li>
+               }
+
+           </ul>
+       </li>
+       <li>
+           <button class="btn btn-link" data-toggle="collapse" data-target="#search">Search</button>
+
+       </li>
+   </ul>
+</p>
+
+
+<div id="search" class="collapse">
+    <div class="col-md-8 col-sm-6 col-xs-6">
+        <div class="row"> 
+            <div class='col-md-5'>
+             @using (Html.BeginForm("Index", "Customer", FormMethod.Get))
+             { 
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" id="search" name="search" value="@ViewBag.Search" class="form-control" placeholder="Search...">
+                        <span class="input-group-btn">
+                            <input class="btn btn-info" type="submit" value="Search" />
+                        </span>
+                    </div>
+                </div>
+                
+                }
+                </div>
+            </div>
+          
+        </div>
+
+
+
+    </div>
+ <div class="row">
+     &nbsp;
+ </div>
+<ul class="list-group">
+
+
+    @foreach (var item in Model)
+    {
+       
+        <li class="list-group-item">
+            <div class="row">
+
+                @{
+                    int NetTotal = item.CustomerOrders.Sum(co => co.OrderDetails.Sum(cod => (cod.SalePrice * cod.Quantity) - cod.Discount));
+                    int NetPaid = item.CustomerOrders.Sum(co => co.OrderPayments.Sum(cop => cop.AmountPaid));
+                    int NetDues = NetTotal - NetPaid;
+
+                    DateTime Today = DateTime.Today;
+                    DateTime NextDate = Today.AddDays(10);
+                    var DueOrder = item.CustomerOrders.Where(o => (o.OrderDetails.Sum(od => (od.SalePrice * od.Quantity) - od.Discount) - o.OrderPayments.Sum(op => op.AmountPaid)) > 0).OrderBy(o => o.DueDate).FirstOrDefault();
+                    int DueOrderTotal = 0;
+                    int DueOrderPayment = 0;
+                    int DueOrderDues = 0;
+
+                    if (DueOrder != null)
+                    {
+                        DueOrderTotal = DueOrder.OrderDetails.Sum(o => (o.SalePrice * o.Quantity) - o.Discount);
+                        DueOrderPayment = DueOrder.OrderPayments.Sum(op => op.AmountPaid);
+                        DueOrderDues = DueOrderTotal - DueOrderPayment;
+                    }
+                }
+
+                <div class="col-md-2">
+                    <small class="text-info">Customer Name</small>
+                    <h5>@item.CustomerName  </h5>
+                    <h6 class="text-muted">  @item.NIC</h6>
+                    <small class="text-muted">  @item.FatherName</small>
+                </div>
+                <div class="col-md-2">
+                    <small class="text-info">Address</small>
+                    <h5>@item.City.CityName  </h5>
+                    <small class="text-muted">  @item.PrimaryAddress</small>
+                </div>
+                <div class="col-md-1 text-center">
+                    <small class="text-info">Total Dues</small>
+                    <br />
+                    <br />
+                    @if (NetDues > 0)
+                {
+                        <h4 class="text-danger">@NetDues</h4>
+                    }
+                    else
+                    {
+                        <h4 class="text-success">@NetDues</h4>
+                    }
+                </div>
+
+
+                @{
+
+
+
+
+
+                    if (DueOrder == null)
+                    {
+
+                        <div class="col-md-4 bg-success">
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <small class="text-info">Total Orders</small>
+                                    <h6 class="text-success"> <span class="glyphicon glyphicon-file"></span> @item.CustomerOrders.Count </h6>
+                                    <small class="text-info">Total Products</small>
+                                    <h6 class="text-success">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                        @{
+                            int TotalProducts = item.CustomerOrders.Sum(o => o.OrderDetails.Sum(od => od.Quantity));
+                                        }
+                                        @TotalProducts
+                                    </h6>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-info">Net Total</small>
+                                    <h6 class="text-success">
+                                        <span class="glyphicon glyphicon-hand-right"></span>
+                                        @NetTotal
+                                    </h6>
+                                    <small class="text-info">Total Payment</small>
+                                    <h6 class="text-success">
+                                        <span class="glyphicon glyphicon-hand-left"></span>
+                                        @NetPaid
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-md-4 bg-danger">
+                                                    <div class="row">
+                                                        <div class="col-md-6 ">
+
+                                                            @{
+
+
+
+                                                                DateTime NextPaybleDate = DueOrder.DueDate;
+
+                                                                TimeSpan TimeRemaining = NextPaybleDate.Subtract(Today);
+
+                                                                int Months = 0;
+                                                                if (TimeRemaining.Days > 0)
+                                                                {
+                                                                    Months = TimeRemaining.Days / 30;
+                                                                }
+                                                                int Days = TimeRemaining.Days - (Months * 30);
+
+                                                                string MonthText = string.Empty;
+                                                                string DayText = string.Empty;
+
+                                                                bool DatePassed = false;
+
+                                                                if (Days < 0)
+                                                                {
+                                                                    Days = Days * -1;
+                                                                    DatePassed = true;
+                                                                }
+
+                                                                if (Months < 0)
+                                                                {
+                                                                    Months = Months * -1;
+                                                                    DatePassed = true;
+                                                                }
+
+                                                                if (Months > 1)
+                                                                {
+                                                                    MonthText = "Months";
+                                                                }
+                                                                else
+                                                                {
+                                                                    MonthText = "Month";
+                                                                }
+
+                                                                if (Days > 1)
+                                                                {
+                                                                    DayText = "Days";
+                                                                }
+                                                                else
+                                                                {
+                                                                    DayText = "Day";
+                                                                }
+
+
+                                                                if (DatePassed)
+                                                                {
+                                                            <small class="text-warning">Due Date</small>
+                                                            <h6 class="text-danger"><span class="glyphicon glyphicon-calendar"></span> @NextPaybleDate.ToString("ddd, dd MMM yyyy")</h6>
+                                                            <small class="text-warning">Time Remaining</small>
+                                                            <h6 class="text-danger"><kbd> <span class="glyphicon glyphicon-time"></span>   @Months @MonthText &amp; @Days @DayText Passed </kbd> </h6>
+                        }
+                        else
+                        {
+                                                            <small class="text-info">Next Due Date</small>
+                                                            <h6 class="text-warning"><span class="glyphicon glyphicon-calendar"></span> @NextPaybleDate.ToString("ddd, dd MMM yyyy")</h6>
+                                                            <small class="text-info">Time Remaining</small>
+                                                            <h6 class="text-success"><span class="glyphicon glyphicon-time"></span>    @Months @MonthText &amp; @Days @DayText Left </h6>
+                        }
+
+                                                            }
+
+                                                        </div>
+                                                        <div class="col-md-3 ">
+                                                            <small class="text-info">Dues</small>
+                                                            <h6 class="text-success"><span class="glyphicon glyphicon-file"></span>  @DueOrderDues</h6>
+                                                            <small class="text-info">Installment</small>
+                                                            <h6 class="text-success"><span class="glyphicon glyphicon-hand-right"></span>
+                                                                @{
+                                                                    var IMonth = DueOrder.DueDate.Month;
+                                                                    var IDay = DueOrder.DueDate.Day;
+                                                                    var IYear = DueOrder.DueDate.Year;
+
+                                                                    IMonth = IMonth - 1;
+                                                                    if (IMonth == 0)
+                                                                    {
+                                                                        IMonth = 12;
+                                                                        IYear--;
+                                                                    }
+                                                                    var InstallmentFrom = new DateTime(IYear, IMonth, IDay);
+                                                                    var IToday = DateTime.Today;
+
+                                                                    var IDays = IToday - InstallmentFrom;
+                                                                    var IDaysDiff = IDays.Days;
+                                                                    var INoOfInstallmets = Math.Ceiling((decimal)IDays.Days / 30);
+
+                                                                    if (IDaysDiff > 0)
+                                                                    {
+                                                                        <strong>@DueOrder.MonthlyInstallment x @INoOfInstallmets</strong>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <strong>@DueOrder.MonthlyInstallment </strong>
+                                                                    }
+                                                                }
+                                                           </h6>
+
+
+                                                        </div>
+                                                        <div class="col-md-3 ">
+                                                            <small class="text-info">Net Total</small>
+                                                            <h6 class="text-success"><span class="glyphicon glyphicon-hand-right"></span>  @DueOrderTotal</h6>
+                                                            <small class="text-info">Payment</small>
+                                                            <h6 class="text-success"><span class="glyphicon glyphicon-hand-right"></span> @DueOrderPayment</h6>
+
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                                }
+
+                }
+                <div class="col-md-3 text-right">
+                    <br /><br />
+                    <div class="btn-group" role="group" aria-label="...">
+
+                        <div class="btn-group">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                @{
+                                    int orders = item.CustomerOrders.Count;
+                                    string OrderText = string.Empty;
+
+                                    if (orders == 1)
+                                    {
+                                        OrderText = orders.ToString() + " Order";
+                                    }
+                                    else
+                                    {
+                                        OrderText = orders.ToString() + " Orders";
+                                    }
+
+                                }
+                                @OrderText
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+
+                                @{
+                                    var ordersdata = item.CustomerOrders.OrderByDescending(o => o.OrderDate).ToList();
+                                    if (ordersdata.Count > 10)
+                                    {
+                                        ordersdata = ordersdata.OrderBy(o => o.DueDate).Take(10).ToList();
+                                    }
+
+                                }
+
+                                @foreach (var order in ordersdata)
+                                {
+                                    int OrderTotal = order.OrderDetails.Sum(o => (o.SalePrice * o.Quantity) - o.Discount);
+                                    int OrderPaid = order.OrderPayments.Sum(op => op.AmountPaid);
+                                    int OrderDues = OrderTotal - OrderPaid;
+
+                                    <li class="dropdown-header">
+
+                                        Dues: @OrderDues
+                                    </li>
+
+
+                                    if (OrderDues > 0)
+                                    {
+                                        <li class="active">
+                                            @Html.ActionLink(order.DueDate.ToString("ddd, dd MMM yyyy"), "Details", "Order", new { id = order.Id }, null)
+                                        </li>
+
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            @Html.ActionLink(order.OrderDate.ToString("ddd, dd MMM yyyy"), "Details", "Order", new { id = order.Id }, null)
+                                        </li>
+                                    }
+
+
+                                    <li role="separator" class="divider"></li>
+                                }
+
+                                <li class="dropdown-header">
+
+                                    New Order
+                                </li>
+                                <li>
+
+                                    @Html.ActionLink("Cash Order", "Create", "Order", new { customerid = item.Id }, null)
+
+                                </li>
+                                <li>
+
+                                    @Html.ActionLink("Installment Order", "Create", "Order", new { customerid = item.Id, installment = true }, null)
+
+                                </li>
+                            </ul>
+                        </div>
+
+
+
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Customer
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="text-warning">@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "text-warning" }) </li>
+                                <li class="text-success">@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "text-success" }) </li>
+                                <li class="text-danger">@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "text-danger" })</li>
+
+                                @if (item.Guarantors.Count > 0)
+                                {
+                                    int Guarantors = item.Guarantors.Count;
+                                    string GuarantorsCite = Guarantors == 1 ? "Guarantor" : "Guarantors";
+
+                                    string GuarantorLable = Guarantors.ToString() + " " + GuarantorsCite;
+                                    <li class="text-danger">@Html.ActionLink(GuarantorLable, "Index", "Guarantor", new { page = 1, customerid = item.Id }, new { @class = "text-danger" })</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+
+
+
+</li>
+
+   }
+</ul>
+
+<br />
+<div class="hidden-print">
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page , cityid = ViewBag.CityId,search=ViewBag.Search}))
+</div> 

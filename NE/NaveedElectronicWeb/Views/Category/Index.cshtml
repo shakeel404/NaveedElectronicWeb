@@ -1,0 +1,67 @@
+﻿@model PagedList.IPagedList<NaveedElectronicWeb.NEModel.Category>
+@using PagedList.Mvc;
+
+ 
+<br/>
+<div>
+    <h3>Categories</h3>
+</div>
+
+<p class="hidden-print">
+   <ol class="breadcrumb">
+       <li class="active">
+           <strong>@Html.ActionLink("Add New", "Create")</strong>
+       </li>
+       <li class="active">
+           @Html.ActionLink("Print", "Print",null,new { target="_blank" })
+       </li>
+   </ol>
+</p>
+<table class="table">
+    <tr>
+        <th>
+          Category Name 
+        </th>
+        <th>
+          Products on hand
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CategoryName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Products.Count)
+            &nbsp;
+           
+            @if (item.Products.Count > 0)
+            {
+                @Html.ActionLink("View Products", "Index", "Product", new { page = 1, categoryid = item.Id }, new { @class = "text-dark" })
+            }
+            else
+            {
+
+                @Html.ActionLink("Add New", "Create","Product",null,new { @class="text-dark"})
+            }
+
+        </td>
+        <td class="hidden-print">
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }, new { @class = "text-warning" }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }, new { @class = "text-info" }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id }, new { @class = "text-danger" })
+        </td>
+    </tr>
+}
+
+</table>
+
+<br />
+<div class="hidden-print"> 
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page }))
+</div>

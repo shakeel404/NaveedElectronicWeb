@@ -1,0 +1,29 @@
+  <li class="list-group-item active-inverse">
+                            <div class="row bg-success">
+                                <div class="col-md-3">
+
+                                </div>
+                                <div class="col-md-3">
+
+                                </div>
+                                <div class="col-md-2">
+
+
+                                </div>
+                                <div class="col-md-2">
+                                    <small class="text-white">Total Items</small><br />
+                                    <strong>@Model.SupplyDetails.Sum(sd => sd.Quantity)</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <small class="text-white">Net Total</small><br />
+                                    <strong>
+
+                                        @{
+                                            int nettotal = Model.SupplyDetails.Sum(sd => sd.PurchasePrice * sd.Quantity);
+                                        }
+                                        @nettotal
+                                    </strong>
+                                </div>
+                            </div>
+
+                        </li>

@@ -1,0 +1,31 @@
+ <li class="list-group-item">
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <small class="text-info">Category</small><br />
+                                        <strong>@item.Product.Category.CategoryName</strong>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <small class="text-info">Model</small> <br />
+                                        <strong>@item.Product.Model</strong>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <small class="text-info">Purchase Price</small><br />
+                                        <strong>@item.PurchasePrice</strong>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <small class="text-info">Quantity</small><br />
+                                        <strong>@item.Quantity</strong>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <small class="text-info">Total</small><br />
+                                        <strong>
+
+                                            @{
+                                                int total = item.PurchasePrice * item.Quantity;
+                                            }
+                                            @total
+                                        </strong>
+                                    </div>
+                                </div>
+                            </li>

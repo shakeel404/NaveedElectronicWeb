@@ -1,0 +1,423 @@
+﻿@model NaveedElectronicWeb.NEModel.Customer
+
+<link href="~/Content/PrintPage.css" rel="stylesheet" />
+
+<div class="visible-print">
+    <div class="visible-print">
+        <div class="print-page">
+
+
+            <div class="row">
+
+                <div class="print-heading">
+
+                    <h1 class="text-center">I N V O I C E</h1>
+
+                </div>
+            </div>
+            <div class="row">
+                &nbsp;
+            </div>
+            <div class="row">
+
+                <div class="print-title-right text-left">
+                    <div class="col-xs-7">
+                        <h2>
+                            <span class="glyphicon glyphicon-leaf icon"></span> Naveed Electronics
+                        </h2>
+                    </div>
+                    <div class="col-xs-5">
+                        <small>Bagh Dehrai Road Main Bazar </small> <br />
+                        <small>Bara Durushkhela Matta Swat</small>
+
+                    </div>
+                </div>
+
+                <div class="print-title-empty text-left">
+                    <h4>
+                        <span class="glyphicon glyphicon-phone-alt icon-empty"></span> 0946-795569
+                        &nbsp;
+                        <span class="glyphicon glyphicon-phone icon-empty"></span> 0345-945-1182
+                        &nbsp;<span class="glyphicon glyphicon-phone icon-empty"></span> 0313-808-0788
+                    </h4>
+
+
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <!--Customer header-->
+                <div class="col-xs-5">
+                    <div class="client-empty text-left">
+                        <h3>
+                            Bill To
+                        </h3>
+                    </div>
+                    <div class="client-heading text-left">
+                        <h3>
+                            <span class="glyphicon glyphicon-user icon-client"></span>
+                            <small>@Model.CustomerName S/D of @Model.FatherName</small>
+                        </h3>
+                    </div>
+                    <div class="client-heading text-left">
+                        <h3>
+                            <span class="glyphicon glyphicon-credit-card icon-client"> </span>
+                          
+                            <small>@Model.NIC</small>
+                        </h3>
+                    </div>
+                    <div class="client-heading text-left">
+                        <h3>
+                            <span class="glyphicon glyphicon-map-marker icon-client"></span>
+                            <small>@Model.City.CityName  @Model.PrimaryAddress</small>
+                        </h3>
+                    </div>
+                </div>
+                <div class="col-xs-2"></div>
+
+                <!--Naveed electronics header-->
+                <div class="col-xs-5  text-right">
+                     
+                   
+                    <div class="client-empty text-left">
+                        <h3>
+                            Total Dues
+                        </h3>
+                    </div>
+                    <div class="client-heading text-left">
+                        <h3>
+                            <span class="glyphicon glyphicon-share-alt icon-client"></span>
+                            <small> PKR</small>
+                            @{
+                                int PrintGrandItemsShiped = Model.CustomerOrders.Sum(o => o.OrderDetails.Sum(od => od.Quantity));
+                                int PrintGrandNetAmount = Model.CustomerOrders.Sum(o => o.OrderDetails.Sum(od => (od.SalePrice * od.Quantity)-od.Discount));
+                                int PrintGrandPaid = Model.CustomerOrders.Sum(o => o.OrderPayments.Sum(op => op.AmountPaid));
+
+                                int PrintGrandDues = PrintGrandNetAmount - PrintGrandPaid;
+
+                            }
+                            @PrintGrandDues
+                            <small>.00</small>
+                        </h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                @if (Model.CustomerContacts.Count > 0)
+                {
+                    <div class="print-title-empty text-left">
+                        <h4>
+                            @{ 
+                                var Contacts = Model.CustomerContacts.Count > 2 ? Model.CustomerContacts.Take(2) : Model.CustomerContacts;
+                            }
+                            
+                            @foreach (var contact in Contacts)
+                            {
+                                 
+                                    <span class="glyphicon glyphicon-phone icon-empty "></span>
+                                     @contact.Number
+                                 
+                            }
+                        </h4>
+                    </div>
+                }
+                else
+                {
+                    <p> &nbsp;</p>
+                }
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+
+
+                    <table class=" table table-striped">
+                        <tr class="info">
+                            <th>S.No</th>
+                            <th>Order No</th>
+                            <th>Order Date</th>
+                            <th>Due Date</th>
+                            <th class="text-center">Products</th>
+                            <th class="text-center">Net Total</th>
+                            <th class="text-center">Paid </th>
+                            <th class="text-center">Dues </th>
+                        </tr>
+                        @{
+                            int row = 1;
+                        }
+                        @foreach (var item in Model.CustomerOrders)
+                        {
+                            <tr>
+
+                                <td>@row</td>
+                                <td>
+                                    @{
+
+                                        string date = item.OrderDate.ToString("yy");
+                                        string id = item.Id.ToString();
+                                        string invoiceno = date + "0" + id;
+                                    }
+                                    @invoiceno
+                                </td>
+                                <td>@item.OrderDate.ToString("ddd, dd, MMM, yyyy")</td>
+                                <td>@item.DueDate.ToString("ddd, dd, MMM, yyyy")</td>
+                                @{
+                                    int PrintTotalProducts = item.OrderDetails.Sum(o => o.Quantity);
+                                    int PrintNetAmount = item.OrderDetails.Sum(o => (o.SalePrice *o.Quantity)-o.Discount);
+                                    int PrintPaid = item.OrderPayments.Sum(o => o.AmountPaid);
+                                    int PrintDues = PrintNetAmount - PrintPaid;
+                                }
+                                <td class="text-center">@PrintTotalProducts</td>
+                                <td class="text-center">@PrintNetAmount</td>
+                                <td class="text-center">@PrintPaid</td>
+                                <td class="text-center">@PrintDues</td>
+                            </tr>
+
+                                        row++;
+                                    }
+
+
+                        <tr>
+
+
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">@PrintGrandItemsShiped</th>
+                            <th class="text-center">@PrintGrandNetAmount</th>
+                            <th class="text-center">@PrintGrandPaid</th>
+                            <th class="text-center">@PrintGrandDues</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-6">
+                        <span class="glyphicon glyphicon-copyright-mark icon-empty"></span> <span class="trad">2017</span> &nbsp; <span class="glyphicon glyphicon-leaf icon-empty"></span> &nbsp;<span class="trad">Naveed Electronics</span>
+                        <br />
+                        <strong class="text-dark"> <span class="glyphicon glyphicon-calendar icon-empty"></span> Date Printed @DateTime.Now.ToString("dd-MMM-yyyy") @DateTime.Now.ToString("h:mm tt")</strong>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <span class="glyphicon glyphicon-star icon-empty"></span><span class="trad"> Powerd by Udhyana</span> <span class="glyphicon glyphicon-phone icon-empty"></span><span class="trad"> 0346-947-6404</span>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div class="hidden-print">
+<br />
+<p>
+   <ul class="breadcrumb">
+       <li class="active">
+           <strong>
+               @Html.ActionLink("Back to List", "Index")
+             
+           </strong>
+       </li>
+       <li>
+           @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+
+       </li>
+       <li>
+           @Html.ActionLink("Add Guarantor", "Create", "Guarantor", new { customerid = Model.Id },null)
+       </li>
+       <li>
+           <button onclick="Print()" class="btn btn-link">Print</button>
+       </li>
+   </ul>
+</p>
+<div>
+    <h4>Customer</h4>
+    <hr />
+    <div class="hidden-print">
+        <div class="row">
+          
+            
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                           <div class="row">
+                               <div class="col-md-4">
+                                   <h3>@Model.CustomerName </h3>
+                                   <h6> @Model.FatherName</h6>
+                                   <span>
+                                       <small>@Model.NIC</small>
+                                       
+                                   </span>
+                                  
+                                  
+                               </div>
+                               <div class="col-md-4">
+                                
+                                       <h6>@Model.City.CityName</h6> 
+                                       <small> @Model.PrimaryAddress</small>
+                                  
+                               </div>
+                           </div>
+                        </li>
+                        @{
+                            int TotalOrders = Model.CustomerOrders.Count;
+                            int TotalProducts = Model.CustomerOrders.Sum(o => o.OrderDetails.Sum(ord => ord.Quantity));
+                            int NetTotal = Model.CustomerOrders.Sum(o => o.OrderDetails.Sum(ord => (ord.SalePrice * ord.Quantity) - ord.Discount));
+                            int TotalPayment = Model.CustomerOrders.Sum(o => o.OrderPayments.Sum(ord => ord.AmountPaid));
+                            int TotalDues = NetTotal - TotalPayment;
+                        }
+                        <li class="list-group-item list-group-item-success">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <small class="text-info">Total Orders</small> <br />
+                                    <strong>@TotalOrders</strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <small class="text-info">Total Products</small><br />
+                                    <strong>@TotalProducts </strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <small class="text-info">Net Total</small> <br />
+                                    <strong>@NetTotal</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <small class="text-info">Total Payment</small><br />
+                                    <strong>@TotalPayment</strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <small class="text-info">Total Dues</small><br />
+                                    <strong>@TotalDues</strong>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <br />
+
+
+
+
+
+
+            <div class="row">
+                @if (Model.CustomerOrders.Count > 0)
+                {
+                    <div class="col-md-8">
+
+                        <ul class="list-group">
+                            <li class="list-group-item active">Orders</li>
+
+                            @foreach (var item in Model.CustomerOrders.OrderBy(co=>co.Id))
+                            {
+                               
+                                    int OrderTotal = item.OrderDetails.Sum(od => (od.SalePrice * od.Quantity) - od.Discount);
+                                    int OrderPayment = item.OrderPayments.Sum(od => od.AmountPaid);
+                                    int OrderDues = OrderTotal - OrderPayment;
+
+                                    string Active = string.Empty;
+
+                                    if(OrderDues>0)
+                                    {
+                                        Active = "list-group-item-warning";
+                                    }
+                                
+
+                                <li class="list-group-item @Active">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <small class="text-info">Date</small>
+                                            <h6 class="text-muted" >@item.OrderDate.ToString("ddd, dd MMM yyyy")</h6>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-info">Due Date</small>
+                                            <h6 class="text-muted">@item.DueDate.ToString("ddd, dd MMM yyyy")</h6>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-info">Due Date</small>
+                                            <h6 class="text-muted">
+                                                @OrderDues
+                                            </h6>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <br />
+                                            @Html.ActionLink("Show Order", "Details", "Order", new { id = item.Id }, null)
+                                        </div>
+                                    </div>
+                                   
+                                </li>
+                                        }
+                            <li class="list-group-item">@Html.ActionLink("Add New", "Create", "Order", new { customerid = Model.Id }, new { @class = " text-dark" })</li>
+                        </ul>
+
+                    </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-4">
+                                                <div class="alert alert-info alert-dismissable">
+                                                    <strong>No Orders</strong>
+                                                    <small>@Html.ActionLink("Add New", "Create", "Order", new { customerid = Model.Id }, null)</small>
+                                                </div>
+                                            </div>
+                                        }
+                @if (Model.CustomerContacts.Count > 0)
+                {
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item active">Contacts</li>
+                            @foreach (var item in Model.CustomerContacts)
+                {
+                                <li class="list-group-item">
+                                    <small class="text-info">@item.ContactTitle</small>
+
+                                    <strong>@item.Number</strong>
+                                    @Html.ActionLink("Remove", "DeleteContact",new { contactid=item.Id,customerid=Model.Id },new { @class="text-dark" })
+                                </li>
+                            }
+
+                            <li class="list-group-item">@Html.ActionLink("Add New", "AddContact", new { customerid = Model.Id }, new { @class = " text-dark" })</li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-4">
+                        <div class="alert alert-info alert-dismissable">
+                            <strong>No Contacts</strong>
+                            <small>@Html.ActionLink("Add One", "AddContact", new { customerid = Model.Id })</small>
+                        </div>
+                    </div>
+                }
+                
+            </div>
+
+
+
+
+        </div>
+
+    </div>
+
+
+
+</div>
+</div>
+
+<script>
+
+    function Print() {
+        window.print();
+    }
+</script>

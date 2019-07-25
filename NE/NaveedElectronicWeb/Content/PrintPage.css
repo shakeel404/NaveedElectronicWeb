@@ -1,0 +1,215 @@
+﻿/*body {
+    background-image: url('../Images/NEF2.PNG') !important;
+    background-size: 40px,40px !important;
+}*/
+@font-face {
+    font-family: 'Jameel Noori Nastaleeq';
+    src: url('../../fonts/Jameel Noori Nastaleeq.ttf') format('truetype');
+}
+.urdu-text {
+    font-family: 'Jameel Noori Nastaleeq', serif, sans-serif;
+}
+ .print-page {
+}
+
+.print-heading {
+    background-color: steelblue !important;
+    color: white !important;
+    font: inherit !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.city-danger {
+    color: #581a1a !important;
+}
+
+.contact-text {
+    color: #333 !important;
+}
+
+.sibling-text {
+    color: #333 !important;
+}
+@media print {
+    @page {
+        size: A4 !important;
+        margin: 0 !important;
+    }
+
+    .print-heading {
+        /*width: 200% !important;
+                margin-left: -20px !important;
+                color: white !important;*/
+        font: inherit !important;
+    }
+
+    .print-title-right {
+        background-color: steelblue !important;
+        width: 60% !important;
+        /*margin-left: -20px !important;*/
+        color: white !important;
+        font: inherit !important;
+        border-bottom-right-radius: 50px !important;
+        border-top-right-radius: 50px !important;
+        height: 50px !important;
+        padding-top: 10px !important;
+    }
+
+    .print-title-empty {
+        width: 80% !important;
+        /*margin-left: -20px !important;*/
+        color: white !important;
+        font: inherit !important;
+        height: 50px !important;
+        padding-top: 10px !important;
+    }
+
+
+    .print-title-left {
+        background-color: steelblue !important;
+        width: 100% !important;
+        margin-left: -20px !important;
+        color: white !important;
+        font: inherit !important;
+        border-bottom-left-radius: 50px !important;
+        border-top-left-radius: 50px !important;
+        height: 50px !important;
+        padding-top: 10px !important;
+    }
+
+    .client-heading {
+        background-color: #e6e4e4 !important;
+        /*border-color: steelblue !important;
+                border-top: 0px !important;
+                border-left: 0px !important;
+                border-right: 0px !important;
+                border-bottom-width: 1px  !important;
+                border-style:solid !important;*/
+        width: 100% !important;
+        margin-left: 0px !important;
+        font: inherit !important;
+        /*border-bottom-right-radius: 50px !important;
+                border-top-right-radius: 50px !important;*/
+        padding-top: 10px !important;
+        margin-top: 3px !important;
+    }
+
+    .client-empty {
+        background-color: transparent !important;
+        width: 100% !important;
+        margin-left: 0px !important;
+        font: inherit !important;
+        padding-top: 10px !important;
+        margin-top: 3px !important;
+    }
+
+    .print-title-empty > h1, .print-title-empty > h2, .print-title-empty > h3, .print-title-empty > h4, .print-title-empty > small, .print-title-empty > h1 > strong, .print-title-empty > h2 > strong, .print-title-empty > h3 > strong, .print-title-empty > h4 > strong {
+        color: steelblue !important;
+        padding-bottom: 5px !important;
+        padding-top: 5px !important;
+    }
+
+    .client-heading > h1, .client-heading > h2, .client-heading > h3, .client-heading > h4, .client-heading > small, .client-heading > h1 > strong, .client-heading > h2 > strong, .client-heading > h3 > strong, .client-heading > h4 > strong, .client-heading > h1 > small, .client-heading > h2 > small, .client-heading > h3 > small, .client-heading > h4 > small {
+        color: steelblue !important;
+        padding-bottom: 5px !important;
+        padding-top: 5px !important;
+    }
+
+    .client-empty > h1, .client-empty > h2, .client-empty > h3, .client-empty > h4, .client-empty > small, .client-empty > strong, .client-empty > h1 > strong, .client-empty > h2 > strong .client-empty > h3 > strong .client-empty > h4 strong {
+        color: steelblue !important;
+        padding-bottom: 5px !important;
+        padding-top: 5px !important;
+    }
+
+    .tri {
+        display: inline !important;
+        width: 0px;
+        height: 0px;
+        background-color: blue;
+        border-top: 40px solid red;
+        border-bottom: 40px solid green;
+        border-left: 40px solid black;
+        border-right: 40px solid indigo;
+    }
+
+    .text-left {
+        padding-left: 20px !important;
+    }
+
+    .icon-empty:before {
+        color: steelblue !important;
+        padding-bottom: 10px !important;
+        padding-top: 10px !important;
+    }
+
+    .icon:before {
+        color: white !important;
+        padding-bottom: 10px !important;
+        padding-top: 10px !important;
+    }
+
+    .icon-client:before {
+        color: cadetblue !important;
+    }
+
+    h1, h2, h3, h4, small {
+        color: white !important;
+        padding-bottom: 10px !important;
+        padding-top: 10px !important;
+    }
+
+    html, body, h1, h2, h3, h4, h5, h6 {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    h1 {
+        font-size: 50px !important;
+    }
+
+    .orange {
+        background-color: darkorange !important;
+    }
+
+    th {
+        color: white !important;
+    }
+
+    .table td {
+        background-color: #bbccdb !important;
+        color: #333 !important;
+    }
+
+    .table th {
+        background-color: cadetblue !important;
+    }
+
+    
+    .trad {
+        color: darkred !important;
+    }
+    td{
+        font-size:large !important;
+        border-bottom:2px solid !important;
+    }
+    th{
+        font-size:x-large !important;
+    }
+
+    .text-danger{
+        color:#bd2323 !important;
+    }
+
+    .border-bottom {
+        border-bottom: 2px solid !important;
+        border-color:black !important;
+        background-color:transparent !important;
+    }
+    .group-header{
+
+        color:black !important;
+    }
+
+    
+}

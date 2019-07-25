@@ -1,0 +1,240 @@
+﻿@model IEnumerable<NaveedElectronicWeb.NEModel.CustomerOrder>
+
+ @{
+
+     DateTime start = ViewBag.Start;
+     DateTime end = ViewBag.End;
+
+     string location = ViewBag.City;
+}
+<style>
+    .city-danger {
+        color: #581a1a !important;
+    }
+</style>
+
+<link href="~/Content/PrintPage.css" rel="stylesheet" />
+<div class="hidden-print">
+    <p>
+        <ul class="breadcrumb">
+            <li class="active">
+                <strong>
+                    @Html.ActionLink("Dashboard", "Index", "Home")
+                </strong>
+            </li>
+            <li>
+                <button class="btn btn-link" onclick="Print()">Print</button>
+            </li>
+        </ul>
+    </p>
+</div>
+<div class="visible-print">
+    <div class="print-page">
+
+
+        <div class="row">
+
+            <div class="print-heading">
+
+                <h1 class="text-center">I N V O I C E</h1>
+
+            </div>
+        </div>
+        <div class="row">
+            &nbsp;
+        </div>
+        <div class="row">
+
+            <div class="print-title-right text-left">
+                <div class="col-xs-7">
+                    <h2>
+                        <span class="glyphicon glyphicon-leaf icon"></span> Naveed Electronics
+                    </h2>
+                </div>
+                <div class="col-xs-5">
+                    <small>Bagh Dehrai Road Main Bazar </small> <br />
+                    <small>Bara Durushkhela Matta Swat</small>
+
+                </div>
+            </div>
+
+            <div class="print-title-empty text-left">
+                <h4>
+                    <span class="glyphicon glyphicon-phone-alt icon-empty"></span> 0946-795569
+                    &nbsp;
+                    <span class="glyphicon glyphicon-phone icon-empty"></span> 0345-945-1182
+                    &nbsp;<span class="glyphicon glyphicon-phone icon-empty"></span> 0313-808-0788
+                </h4>
+
+
+
+            </div>
+
+        </div>
+
+        @{
+            int GrandPurchase = Model.Sum(o => o.OrderDetails.Sum(od => od.PurchasePrice * od.Quantity));
+            int GrandSale = Model.Sum(o => o.OrderDetails.Sum(od => (od.SalePrice * od.Quantity) - od.Discount));
+            int GrandProfit = Model.Sum(o=>o.OrderDetails.Sum(od => ((od.SalePrice * od.Quantity) - od.Discount)-((od.PurchasePrice* od.Quantity))));
+        }
+        <div class="row">
+            <!--Customer header-->
+            <div class="col-xs-5">
+                <div class="client-empty text-left">
+                    <h3>
+                        Total Profit in
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-map-marker icon-client"></span>
+                        @location
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-calendar icon-client"></span>
+                        <small>From : @start.ToString("dddd, dd MMMM yyyy") </small>
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-calendar icon-client"></span>
+                        <small>To : @end.ToString("dddd, dd MMMM yyyy") </small>
+                    </h3>
+                </div>
+
+
+            </div>
+            <div class="col-xs-2"></div>
+
+            <!--Guarantor header-->
+
+            <div class="col-xs-5  text-right">
+
+                <div class="client-empty text-left">
+                    <h3>
+                       Profit Amount
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-share-alt icon-client"></span>
+                        <small> PKR</small>
+
+                        @GrandProfit<small>.00</small>
+
+                    </h3>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            &nbsp;
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+
+
+                <table class=" table table-striped">
+                    <tr class="info">
+                        <th>S.No</th>
+                        <th>Category</th>
+                        <th>Model</th>
+                        <th class="text-center">Purchase Price</th>
+                        <th class="text-center">Sale Price</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">Discount</th>
+                        <th class="text-center">Net Sale</th>
+                        <th class="text-center">Net Purchase</th>
+                        <th class="text-center">Net Profit</th>
+                    </tr>
+                    @{
+                        int row = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        foreach (var detail in item.OrderDetails)
+                        {
+                            <tr>
+
+                                <td>@row</td>
+                                <td>@detail.Product.Category.CategoryName </td>
+                                <td>@detail.Product.Model</td>
+                                <td class="text-center">@detail.PurchasePrice</td>
+                                <td class="text-center">@detail.SalePrice</td>
+                                <td class="text-center">@detail.Quantity</td>
+                                <td class="text-center">@detail.Discount</td>
+                                @{
+                                    int NetSale = (detail.SalePrice * detail.Quantity) - detail.Discount;
+                                    int NetPurchase = detail.PurchasePrice * detail.Quantity;
+                                    int NetProfit = NetSale - NetPurchase;
+                                }
+                                <td class="text-center">@NetSale</td>
+                                <td class="text-center">@NetPurchase</td>
+                                <td class="text-center">@NetProfit</td>
+                            </tr>
+                                                row++;
+                                            }
+
+                                        }
+
+
+                    <tr class="info">
+
+
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th ></th>
+                        <th ></th>
+                        <th ></th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">@GrandSale</th>
+                        <th class="text-center">@GrandPurchase</th>
+                        <th class="text-center">@GrandProfit</th>
+                         
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <hr />
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-6">
+                    <span class="glyphicon glyphicon-copyright-mark icon-empty"></span> <span class="trad">2017</span> &nbsp; <span class="glyphicon glyphicon-leaf icon-empty"></span> &nbsp;<span class="trad">Naveed Electronics</span>
+                    <br />
+                    <strong class="text-dark"> <span class="glyphicon glyphicon-calendar icon-empty"></span> Date Printed @DateTime.Now.ToString("dd-MMM-yyyy") @DateTime.Now.ToString("h:mm tt")</strong>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <span class="glyphicon glyphicon-star icon-empty"></span><span class="trad"> Powerd by Udhyana</span> <span class="glyphicon glyphicon-phone icon-empty"></span><span class="trad"> 0346-947-6404</span>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+@section Scripts{
+
+    <script>
+        $(document).ready(Print);
+
+
+        function Print() {
+            window.print();
+        }
+    </script>
+}

@@ -1,0 +1,29 @@
+﻿@model NaveedElectronicWeb.Models.IndexViewModel
+@{
+    ViewBag.Title = "Manage";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div>
+    <h4>Change your account settings</h4>
+    <hr />
+     <div class="row">
+         <div class="col-md-4">
+             <span class="text-dark"><i> Hello</i></span>
+             <h4 class="text-info"><span class="glyphicon glyphicon-user"></span>  @User.Identity.Name</h4>
+             @if (Model.HasPassword)
+            {
+                 @Html.ActionLink("Change your password", "ChangePassword", null, new { @class = "btn btn-warning" })
+             }
+             else
+             {
+                 @Html.ActionLink("Create", "SetPassword", null, new { @class = "btn btn-warning" })
+             }
+         </div>
+         <div class="col-md-4">
+            
+         </div>
+     </div>
+</div>

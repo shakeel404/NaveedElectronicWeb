@@ -1,0 +1,238 @@
+﻿@model IEnumerable<NaveedElectronicWeb.NEModel.Supplier>
+<link href="~/Content/PrintPage.css" rel="stylesheet" />
+ 
+<div class="visible-print">
+    <div class="print-page">
+
+
+        <div class="row">
+
+            <div class="print-heading">
+
+                <h1 class="text-center">I N V O I C E</h1>
+
+            </div>
+        </div>
+        <div class="row">
+            &nbsp;
+        </div>
+        <div class="row">
+
+            <div class="print-title-right text-left">
+                <div class="col-xs-7">
+                    <h2  >
+                        <span class="glyphicon glyphicon-leaf icon"></span> Naveed Electronics 
+                    </h2>
+                </div>
+                <div class="col-xs-5">
+                    <small>Bagh Dehrai Road Main Bazar </small> <br />
+                    <small>Bara Durushkhela Matta Swat</small>
+                     
+                </div>
+            </div>
+
+            <div class="print-title-empty text-left">
+                <h4>
+                    <span class="glyphicon glyphicon-phone-alt icon-empty"></span> 0946-795569
+                    &nbsp;
+                    <span class="glyphicon glyphicon-phone icon-empty"></span> 0345-945-1182
+                    &nbsp;<span class="glyphicon glyphicon-phone icon-empty"></span> 0313-808-0788
+                </h4>
+
+
+
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <!--Supplier header-->
+            @{ 
+                DateTime start = ViewBag.StartDate;
+                DateTime end = ViewBag.EndDate;
+            }
+            <div class="col-xs-5">
+                <div class="client-empty text-left">
+                    <h3>
+                       List of Suppliers
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-calendar icon-client"></span>
+                        <small>From : @start.ToString("ddd, dd MMM yyyy") </small>
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-calendar icon-client"></span>
+                        <small>To : @end.ToString("ddd, dd MMM yyyy")  </small>
+                    </h3>
+                </div>
+                
+            </div>
+            <div class="col-xs-2"></div>
+
+            <!--Naveed electronics header-->
+            <div class="col-xs-5  text-right">
+                <div class="client-empty text-left">
+                    <h3>
+                        Bill To
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-user icon-client"></span>
+                        <small>Muhammad Riaz Amir</small>
+                    </h3>
+                </div>
+                <div class="client-empty text-left">
+                    <h3>
+                        Total Dues
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-share-alt icon-client"></span>
+                        <small> PKR</small>
+                        @{
+                            int PrintGrandItemsShiped = Model.Sum(sp=>sp.Supplies.Sum(spl=>spl.SupplyDetails.Sum(spd=>spd.Quantity)));
+                            int PrintGrandNetAmount = Model.Sum(sp=>sp.Supplies.Sum(spl => spl.SupplyDetails.Sum(spd => spd.Quantity * spd.PurchasePrice)));
+                            int PrintGrandPaid = Model.Sum(sp=>sp.Supplies.Sum(spl => spl.SupplyPayments.Sum(spp => spp.AmountPaid)));
+
+                            int PrintGrandDues = PrintGrandNetAmount - PrintGrandPaid;
+
+                        }
+                        @PrintGrandDues
+                        <small>.00</small>
+                    </h3>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            &nbsp;
+        </div>
+        @if (Model.Count() > 0)
+        {
+
+        
+        <div class="row">
+            <div class="col-xs-12">
+
+
+                <table class=" table table-striped">
+                    <tr class="info">
+                        <th>S.No</th>
+                        <th>Supplier</th>
+                        <th>Company</th>
+                        <th class="text-center">Items Shiped</th>
+                        <th class="text-center">Net Amount</th>
+                        <th class="text-center">Paid </th>
+                        <th class="text-center">Dues </th>
+                    </tr>
+                    @{
+                        int row = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>@row</td>
+                            <td>@item.SupplierName </td>
+                            <td>@item.Company</td>
+
+                            @{
+                                int PrintItemsShiped = item.Supplies.Sum(sp=>sp.SupplyDetails.Sum(spd => spd.Quantity));
+                                int PrintNetAmount = item.Supplies.Sum(sp=>sp.SupplyDetails.Sum(spd => spd.Quantity * spd.PurchasePrice));
+                                int PrintPaid = item.Supplies.Sum(sp=>sp.SupplyPayments.Sum(spd => spd.AmountPaid));
+                                int PrintDues = PrintNetAmount - PrintPaid;
+                            }
+                            <td class="text-center">@PrintItemsShiped</td>
+                            <td class="text-center">@PrintNetAmount</td>
+                            <td class="text-center">@PrintPaid</td>
+                            <td class="text-center">@PrintDues</td>
+                        </tr>
+
+                                    row++;
+                                }
+
+
+                    <tr>
+
+
+                        <th></th>
+                        <th></th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">@PrintGrandItemsShiped</th>
+                        <th class="text-center">@PrintGrandNetAmount</th>
+                        <th class="text-center">@PrintGrandPaid</th>
+                        <th class="text-center">@PrintGrandDues</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+       
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-6">
+                    <span class="glyphicon glyphicon-copyright-mark icon-empty"></span> <span class="trad">2017</span> &nbsp; <span class="glyphicon glyphicon-leaf icon-empty"></span> &nbsp;<span class="trad">Naveed Electronics</span> <br />
+                    <strong class="text-dark"> <span class="glyphicon glyphicon-calendar icon-empty"></span> Date Printed @DateTime.Now.ToString("dd-MMM-yyyy")  @DateTime.Now.ToString("h:mm tt")</strong>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <span class="glyphicon glyphicon-star icon-empty"></span><span class="trad"> Powerd by Udhyana</span> <span class="glyphicon glyphicon-phone icon-empty"></span><span class="trad"> 0346-947-6404</span>
+                </div>
+            </div>
+
+        </div>
+
+         }
+         else
+         {
+
+                                    <div class="print-title-empty text-left">
+                                        <h4>
+                                            <span class="glyphicon glyphicon-search icon-empty"></span>  
+                                            No Suppliers Found
+                                        </h4>
+
+
+
+                                    </div>
+
+
+         }
+
+    </div>
+</div>
+<div class="row">
+    &nbsp;
+</div>
+<div class="hidden-print">
+    <div>
+        <ol class="breadcrumb">
+            <li><strong>@Html.ActionLink("Back to List", "Index")</strong></li>
+            <li>
+                <button type="button" onclick="Print()" class="btn btn-link">Print</button>
+            </li>
+        </ol>
+
+    </div> 
+</div>
+@section Scripts {
+<script>
+   
+
+    function Print() {
+        window.print();
+    }
+
+    $(document).ready(Print());
+
+        
+</script>
+    }
+
+

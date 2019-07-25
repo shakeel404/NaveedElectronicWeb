@@ -1,0 +1,214 @@
+﻿@model NaveedElectronicWeb.NEModel.Product
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Product</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+
+            <ul class="list-group">
+                <li class="list-group-item active">Product Information</li>
+                <li class="list-group-item">
+
+                    <small class="text-info"> Category</small> <br />
+                    <strong>
+                        @Model.Category.CategoryName
+
+                    </strong>
+                    <span class="badge">
+                        @{
+                            var more = @Model.Category.Products.Count - 1;
+                        }
+
+                        @more more
+                    </span>
+
+                </li>
+                <li class="list-group-item">
+                    <small class="text-info">Model</small>
+                    <br />
+                    <strong>
+                        @Model.Model
+                    </strong>
+                </li>
+                <li class="list-group-item">
+                    <small class="text-info">Guarantee/Warantee</small>
+                    <br />
+                    <strong>
+                        @Model.GuaranteeWarranty
+                    </strong>
+                </li>
+                <li class="list-group-item">
+                    <small class="text-info">Quantity</small>
+                    <br />
+                    <strong>
+                        @Model.Quantity
+                    </strong>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="col-md-4">
+            <ul class="list-group">
+                <li class="list-group-item active">Purchase &amp; Sale Information</li>
+                <li class="list-group-item">
+
+                    <small class="text-info"> Purchase Price</small> <br />
+                    <strong>
+                        Rs @Model.PurchasePrice
+
+                    </strong>
+
+
+                    <br />
+
+                    <small class="text-info">History</small> <br />
+                    <small>
+                        Supplies
+
+                    </small>
+                    <span class="badge">
+                        @Model.SupplyDetails.Count
+                    </span>
+                    <br />
+                    <small>
+                        Quantity
+
+                    </small>
+
+                    <span class="badge">
+                        @Model.SupplyDetails.Sum(p => p.Quantity)
+                    </span>
+
+                </li>
+
+
+
+
+                <li class="list-group-item">
+                    <small class="text-info">Sale Price</small>
+                    <br />
+                    <strong>
+                        Rs @Model.SalePrice
+                    </strong>
+
+                    <br />
+                    <small class="text-info">History</small>
+                    <br />
+                    <small>
+                        Orders
+                    </small>
+
+                    <span class="badge"> @Model.OrderDetails.Count </span>
+
+                    <br />
+                    <small>Quantity</small>
+                    <span class="badge"> @Model.OrderDetails.Sum(p => p.Quantity)  </span>
+                </li>
+
+
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <ul class="list-group">
+                <li class="list-group-item active">installment Information</li>
+                <li class="list-group-item">
+
+                    <small class="text-info"> Installment Price</small> <br />
+                    <strong>
+                        Rs @Model.InstallmentPrice
+
+                    </strong>
+
+                    <span class="badge">
+                        @{
+                            var installmentratio = Model.InstallmentRatio * 100;
+                        }
+
+                        @installmentratio%
+                    </span>
+                    <span class="badge">
+                        Ratio @Model.InstallmentRatio
+
+                    </span>
+
+
+                </li>
+                <li class="list-group-item">
+
+                    <small class="text-info"> First Payment</small> <br />
+                    <strong>
+                       @{ 
+                           int firstpayment = (int)Model.FirstPayment;
+                       }
+                        Rs @firstpayment
+                    </strong>
+                    <span class="badge">
+                        @{
+                            var firstpaymentratio = Model.FirstPaymentRatio * 100;
+                        }
+
+                        @firstpaymentratio%
+                    </span>
+                    <span class="badge">
+                        Ratio @Model.FirstPaymentRatio
+
+                    </span>
+
+
+                </li>
+                <li class="list-group-item">
+
+                    <small class="text-info"> Monthly Payment</small> <br />
+                    <strong>
+                       @{ 
+                           int monthlypayment = (int)Model.MonthlyPayment;
+                       }
+                        Rs @monthlypayment
+                    </strong>
+                    <span class="badge">
+                        @Model.NoOfMonths Months
+                    </span>
+
+
+
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+           
+        </div>
+    }
+</div>
+<br />
+<div>
+    <ol class="breadcrumb">
+        <li  class="active">
+            <strong>
+                @Html.ActionLink("Back to List", "Index")
+            </strong>
+        </li>
+        <li class="active">
+
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+
+        </li>
+        <li class="active">
+            
+                @Html.ActionLink("Details", "Details",new {id=Model.Id })
+           
+        </li>
+    </ol>
+</div>

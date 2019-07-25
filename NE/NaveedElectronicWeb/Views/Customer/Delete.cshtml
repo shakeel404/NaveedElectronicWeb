@@ -1,0 +1,91 @@
+﻿@model NaveedElectronicWeb.NEModel.Customer
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Customer</h4>
+    <p>
+        <ul class="breadcrumb">
+            <li class="active">
+                <strong>
+                    @Html.ActionLink("Back to List", "Index")
+                </strong>
+            </li>
+            <li>
+                @Html.ActionLink("Details", "Details", new { id = Model.Id })
+            </li>
+        </ul>
+    </p>
+    <hr />
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h3>@Model.CustomerName </h3>
+                            <h6> @Model.FatherName</h6>
+                            <span>
+                                <small>@Model.NIC</small>
+
+                            </span>
+
+
+                        </div>
+                        <div class="col-md-4">
+
+                            <h6>@Model.City.CityName</h6>
+                            <small> @Model.PrimaryAddress</small>
+
+                        </div>
+                    </div>
+                </li>
+                @{
+                    int TotalOrders = Model.CustomerOrders.Count;
+                    int TotalProducts = Model.CustomerOrders.Sum(o => o.OrderDetails.Sum(ord => ord.Quantity));
+                    int NetTotal = Model.CustomerOrders.Sum(o => o.OrderDetails.Sum(ord => (ord.SalePrice - ord.Discount) * ord.Quantity));
+                    int TotalPayment = Model.CustomerOrders.Sum(o => o.OrderPayments.Sum(ord => ord.AmountPaid));
+                    int TotalDues = NetTotal - TotalPayment;
+                }
+                <li class="list-group-item list-group-item-success">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <small class="text-info">Total Orders</small> <br />
+                            <strong>@TotalOrders</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-info">Total Products</small><br />
+                            <strong>@TotalProducts </strong>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-info">Net Total</small> <br />
+                            <strong>@NetTotal</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-info">Total Payment</small><br />
+                            <strong>@TotalPayment</strong>
+                        </div>
+                        <div class="col-md-2">
+                            <small class="text-info">Total Dues</small><br />
+                            <strong>@TotalDues</strong>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> 
+           
+        </div>
+    }
+
+   
+</div>

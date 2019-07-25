@@ -1,0 +1,690 @@
+﻿@model NaveedElectronicWeb.NEModel.Supply
+
+ 
+@Html.HiddenFor(m => m.Id)
+
+<link href="~/Content/PrintPage.css" rel="stylesheet" />
+
+ 
+<div class="visible-print">
+    <div class="print-page">
+
+
+        <div class="row">
+
+            <div class="print-heading">
+
+                <h1 class="text-center">I N V O I C E</h1>
+
+            </div>
+        </div>
+        <div class="row">
+            &nbsp;
+        </div>
+        <div class="row">
+            
+            <div class="print-title-right text-left">
+                <div class="col-xs-7">
+                    <h2>
+                        <span class="glyphicon glyphicon-leaf icon"></span> Naveed Electronics
+                    </h2>
+                </div>
+                <div class="col-xs-5">
+                    <small>Bagh Dehrai Road Main Bazar </small> <br />
+                    <small>Bara Durushkhela Matta Swat</small>
+
+                </div>
+            </div>
+
+            <div class="print-title-empty text-left">
+                <h4>
+                    <span class="glyphicon glyphicon-phone-alt icon-empty"></span> 0946-795569
+                    &nbsp;
+                    <span class="glyphicon glyphicon-phone icon-empty"></span> 0345-945-1182
+                    &nbsp;<span class="glyphicon glyphicon-phone icon-empty"></span> 0313-808-0788
+                </h4>
+
+
+
+            </div>
+
+        </div>
+
+        <div class="row"> 
+            <div class="col-xs-5">
+                <div class="client-empty text-left">
+                    <h3>
+                        Supplier
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-user icon-client"></span>
+                        <small>@Model.Supplier.SupplierName</small>
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-home icon-client"></span>
+                        <small>@Model.Supplier.Company</small>
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-map-marker icon-client"></span>
+                        <small>@Model.Supplier.PrimaryAddress</small>
+                    </h3>
+                </div>
+            </div>
+            <div class="col-xs-2"></div>
+            <div class="col-xs-5  text-right">
+                <div class="client-empty text-left">
+                    <h3>
+                        Bill To
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-user icon-client"></span>
+                        <small>Muhammad Riaz Amir</small>
+                    </h3>
+                </div>
+                <div class="client-empty text-left">
+                    <h3>
+                        Total Dues
+                    </h3>
+                </div>
+                <div class="client-heading text-left">
+                    <h3>
+                        <span class="glyphicon glyphicon-share-alt icon-client"></span>
+                        <small> PKR</small>
+                        @{
+                            int ptotalremaining = Model.SupplyDetails.Sum(sp => sp.PurchasePrice * sp.Quantity);
+                            int ptotalpaid = Model.SupplyPayments.Sum(sp => sp.AmountPaid);
+                            int ptotaldues = ptotalremaining - ptotalpaid;
+
+                        }
+                        @ptotaldues.ToString()
+                        <small>.00</small>
+                    </h3>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="print-title-empty text-left">
+                <h4>
+                    <span class="glyphicon glyphicon-file icon-empty"></span> @{ 
+                        string date = Model.SupplyDate.ToString("yy");
+                        string id = Model.Id.ToString();
+                        string invoiceno = date + "0" + id;
+                    }
+                    @invoiceno
+                    &nbsp;
+                    <span class="glyphicon glyphicon-calendar icon-empty"></span> @Model.SupplyDate.ToString("ddd, dd MMM yyyy")
+                    
+                </h4>
+
+
+
+            </div>
+        </div>
+     
+        <div class="row">
+            <div class="col-xs-12">
+
+
+                <table class=" table table-striped">
+                    <tr class="info">
+                        <th>S.No</th>
+                        <th>Category</th>
+                        <th>Model</th>
+                        <th class="text-center">Purchase Price</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">Total</th>
+                    </tr>
+                    @{ 
+                        int row = 1;
+                    }
+                   @foreach (var item in Model.SupplyDetails)
+                   {
+                    <tr>
+
+                        <td>@row</td>
+                        <td>@item.Product.Category.CategoryName</td>
+                        <td>@item.Product.Model</td>
+                        <td class="text-center">@item.PurchasePrice</td>
+                        <td class="text-center">@item.Quantity</td>
+                        <td class="text-center">
+                            @{ 
+                                int ptotal = item.Quantity * item.PurchasePrice;
+                            }
+                            @ptotal
+                        </td>
+                    </tr>
+                                    row++;
+                    }
+                   
+                    
+                    <tr>
+
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">
+                            @{ 
+                                int ptotalquantity = Model.SupplyDetails.Sum(sp => sp.Quantity);
+
+                            }
+                            @ptotalquantity
+                        </th>
+                        <th class="text-center">
+                            @ptotalremaining
+                        </th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        @if (Model.SupplyPayments.Count > 0)
+        {
+            row = 1;
+
+        <div class="col-xs-12">
+            <div class="client-empty text-left">
+                <h3>
+                    <span class="glyphicon glyphicon-share-alt icon-client"></span>
+                    Payments
+                </h3>
+            </div>
+        </div>
+         <div class="row">
+
+          
+         <div class="col-xs-6">
+
+
+             <table class=" table table-striped">
+                 <tr class="info">
+                     <th>S.No</th>
+                     <th>Date</th>
+                     <th class="text-center">Payment</th>
+                 </tr>
+
+                 @foreach (var item in Model.SupplyPayments)
+                 {
+                    <tr>
+
+                        <td>@row</td>
+                        <td>@item.DatePaid.ToString("ddd , dd MMM yyyy")</td>
+                        <td class="text-center">@item.AmountPaid</td>
+                    </tr>
+                     row++;
+                 }
+                
+                 
+                 <tr class="info">
+                     <th></th>
+                     <th>Total</th>
+                     <th class="text-center"><small>PKR</small> @ptotalpaid <small>.00</small> </th>
+                 </tr>
+             </table>
+
+
+         </div>
+          
+         </div>
+        }
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-6">
+                    <span class="glyphicon glyphicon-copyright-mark icon-empty"></span> <span class="trad">2017</span> &nbsp; <span class="glyphicon glyphicon-leaf icon-empty"></span> &nbsp;<span class="trad">Naveed Electronics</span>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <span class="glyphicon glyphicon-star icon-empty"></span><span class="trad"> Powerd by Udhyana</span> <span class="glyphicon glyphicon-phone icon-empty"></span><span class="trad"> 0346-947-6404</span>
+                </div>
+            </div>
+
+        </div>
+
+        </div>
+</div>
+ 
+<div class="hidden-print">
+<div>
+    <h4>Supply</h4>
+    <p>
+        <ul class="breadcrumb">
+            <li class="active">
+                <strong>
+                    @Html.ActionLink("Add New Supply", "Create", new { supplierid = Model.Supplier.Id },null)
+                </strong>
+            </li>
+            <li class="active">
+                @Html.ActionLink("Back to List", "Index", "Supply", new { page = 1, supplierId = Model.Supplier.Id },null)
+            </li>
+        </ul>
+
+
+
+    </p>
+    <hr />
+   
+    <div class="row">
+        <div class="col-md-4 ">
+            <ul id="mainboard" class="list-group">
+                <li class="list-group-item active">Supply</li>
+                <li class="list-group-item">
+                    <small class="text-info">Supplied by</small>
+                    <br />
+                    <strong>@Model.Supplier.SupplierName</strong>
+                    <small class="text-dark">@Model.Supplier.Company</small>
+                </li>
+                <li class="list-group-item">
+                    <small class="text-info">Date</small>
+                    <br />
+                    <strong>@Html.DisplayFor(model=>model.SupplyDate)</strong> 
+                </li>
+                <li class="list-group-item">
+                    <small class="text-info">Recieved by</small>
+                    <br />
+                    <strong>@Model.AspNetUser.UserName</strong>
+                    <small class="text-dark">@Model.AspNetUser.Email</small>
+                </li>
+                <li class="list-group-item">
+                    <small class="text-info">Toal Dues</small>
+                    <br />
+                    <strong id="TotalDues">
+                    @{ 
+                        int totalprice = Model.SupplyDetails.Sum(sp => sp.PurchasePrice * sp.Quantity);
+                        int totalpaid = Model.SupplyPayments.Sum(sp => sp.AmountPaid);
+                        string totaldues = (totalprice - totalpaid).ToString()+".00";
+                    }
+                        @totaldues
+                    </strong>
+                    
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                         
+                        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                            <div class="btn-group" role="group">
+                                <button type="button" id="PrintBtn" class="btn btn-info" onclick="PrintPage()">Print Preview</button>
+                            </div>
+                  
+                            @Html.ActionLink("Delete", "Delete", new { id = Model.Id }, new { @class = "btn  btn-danger" })
+
+
+                        </div>
+                             
+                    </div>
+                </li>
+            </ul>
+           
+        </div>
+        <div class="col-md-8">
+ 
+            <div class="row">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="nav active"><a href="#items" data-toggle="tab">Shiped Items</a></li>
+                    <li class="nav"><a href="#payments" data-toggle="tab">Payments</a></li>
+            
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="items">
+                        
+                        <ul class="list-group">
+                            <li class="list-group-item border-top-0"></li>
+                         
+                            @foreach (var item in Model.SupplyDetails)
+                            {
+                                <li class="list-group-item">
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <small class="text-info">Category</small><br />
+                                            <strong>@item.Product.Category.CategoryName</strong>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-info">Model</small> <br />
+                                            <strong>@item.Product.Model</strong>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <small class="text-info">Purchase Price</small><br />
+                                            <strong>@item.PurchasePrice</strong>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <small class="text-info">Quantity</small><br />
+                                            <strong>@item.Quantity</strong>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <small class="text-info">Total</small><br />
+                                            <strong>
+
+                                                @{
+                                                    int total = item.PurchasePrice * item.Quantity;
+                                                }
+                                                @total
+                                            </strong>
+                                           <div class="pull-right">
+                                               <small class="text-right">@Html.ActionLink("Edit", "Edit","SupplyDetail", new { id = item.Id }, new { @class = "text-warning" })</small>
+                                               <small class="text-right">@Html.ActionLink("Delete", "Delete", "SupplyDetail", new { id = item.Id }, new { @class = "text-danger" })</small>
+                                           </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                                    }
+                            <li id="itemsfooter" class="list-group-item active-inverse">
+                                <div class="row">
+                                    <div class="col-md-3">
+
+                                    </div>
+                                    <div class="col-md-3">
+
+                                    </div>
+                                    <div class="col-md-2">
+
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <small class="text-white">Total Items</small><br />
+                                        <strong>@Model.SupplyDetails.Sum(sd => sd.Quantity)</strong>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <small class="text-white">Net Total</small><br />
+                                        <strong>
+
+                                            @{
+                                                int nettotal = Model.SupplyDetails.Sum(sd => sd.PurchasePrice * sd.Quantity);
+                                            }
+                                            @nettotal
+                                        </strong>
+                                    </div>
+                                </div>
+
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane fade" id="payments">
+
+                        <ul class="list-group" id="paymentlist">
+                            <li class="list-group-item border-top-0"></li>
+
+                            @foreach (var item in Model.SupplyPayments)
+                            {
+                                <li class="list-group-item">
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <small class="text-info">Paid by</small><br />
+                                            <strong>@item.AspNetUser.UserName</strong>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <small class="text-info">Date</small> <br />
+                                            <strong>@item.DatePaid.ToString("ddd,dd MMM yyyy")</strong>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-info">Amount </small><br />
+                                            <strong>@item.AmountPaid</strong>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <div class="delete">
+                                                <input type="hidden" value="@item.Id"/>
+                                                <button type="button" onclick="DeleteAmount(this)" class="close"><span class="glyphicon glyphicon-remove"></span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                            <li id="amountfooter" class="list-group-item active-inverse">
+                                <div class="row">
+                                    <div class="col-md-8">
+
+                                    
+                                        <div class="col-lg-6">
+                                            <div class="input-group">
+                                                <input class="form-control text-box single-line valid" data-val="true" data-val-number="The  Amount must be a number." data-val-required="Pleae enter valid amount." id="AmountPaid" name="AmountPaid" type="number" value="0"
+                                                       onchange="ValidateAmount(this)" placeholder="Amount" />
+                                                <span class="input-group-btn">
+                                                    <button id="AddBtn" onclick="AddAmount()" class="btn btn-success" type="button">Add</button>
+                                                </span>
+                                            </div> 
+                                        </div> 
+                                     
+                                     
+
+                                    </div>
+                                    <div class="col-md-4">
+
+                                        <small class="text-white">Total Payment</small><br />
+                                        <strong>@Model.SupplyPayments.Sum(sp=>sp.AmountPaid)</strong>
+
+                                    </div>
+                              
+                                </div>
+
+                            </li>
+                        </ul>
+
+                    </div>
+                    <div id="error"></div>
+                </div>
+            </div>
+
+           
+        </div>
+        
+    </div>
+   
+</div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script>
+
+    $(document).ready(function () {
+
+
+
+
+        $('.nav-tabs a[href="#payments"]').on("shown.bs.tab", function (e) {
+
+
+            var height = $("#payments").innerHeight();
+
+            var boardheight = $("#mainboard").innerHeight();
+
+            if (height > boardheight) {
+
+                if (!$("#mainboard").hasClass("affix")) {
+                    $("#mainboard").addClass("affix")
+                }
+            }
+            else {
+
+                if ($("#mainboard").hasClass("affix")) {
+                    $("#mainboard").removeClass("affix")
+                }
+            }
+            var pos = $("#amountfooter").offset().top;
+            $('html, body').animate({ scrollTop: pos }, 1000);
+
+
+
+        });
+
+        $('.nav-tabs a[href="#items"]').on("shown.bs.tab", function (e) {
+
+            var height = $("#items").innerHeight();
+
+            var boardheight = $("#mainboard").innerHeight();
+
+            if (height > boardheight) {
+
+                if (!$("#mainboard").hasClass("affix")) {
+                    $("#mainboard").addClass("affix")
+                }
+            }
+            else {
+
+                if ($("#mainboard").hasClass("affix")) {
+                    $("#mainboard").removeClass("affix")
+                }
+            }
+
+            var pos = $("#itemsfooter").offset().top;
+            $('html, body').animate({ scrollTop: pos }, 1000);
+
+
+
+
+
+        });
+
+        var currentURL = window.location;
+
+        if (currentURL.href.includes("#payments")) {
+
+            $('.nav-tabs a[href="#payments"]').tab('show');
+        }
+    });
+
+
+
+
+    function PrintPage() {
+        window.print();
+    }
+
+    function AddAmount() {
+
+        $("#AddBtn").addClass("hide");
+
+        var id = $("#Id").val();
+        var amount = parseInt($("#AmountPaid").val());
+        $.ajax({
+            url: "@Url.Action("", "api/payment")",
+            data: JSON.stringify({
+                SupplyId: id,
+                AmountPaid: amount
+
+            }),
+            traditional: true,
+            type: "POST",
+            contentType: "application/json",
+            success: function () {
+
+                $("#AddBtn").removeClass("hide");
+                SuccessPaid();
+
+            },
+            error: function (response) {
+
+
+                FailurePaid();
+                $("#AddBtn").removeClass("hide");
+            }
+        });
+
+
+    }
+    function DeleteAmount(sender) {
+
+        var id = $(sender).parents(".delete").children(":input:first").val();
+
+        $.ajax({
+            url: "@Url.Action("", "api/payment/")"+id.toString(),
+            traditional: true,
+            type: "Delete",
+            success: function () {
+
+
+                SuccessDelete($(sender).parents("li"));
+
+            },
+            error: function (response) {
+
+                console.log(response);
+
+                FailureDelete();
+
+            }
+        });
+
+    }
+    function ValidateAmount(sender) {
+
+        var amount = parseInt($(sender).val());
+
+        var dues = parseInt($("#TotalDues").text());
+
+
+        if (amount > dues) {
+
+            var alertmessage = '<div class="alert alert-danger alert-dismissible" role= "alert" >  <button type="button" class="close" style="padding-top:0px !Important; margin-top:0px !Important;" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <strong>Amount</strong> <small>Please enter amount less then or equal to ' + dues.toString() + '</small>   </div > ';
+
+               $("#error").children().remove();
+
+               var btn = $("#AddBtn");
+               if (!btn.hasClass("hide")) {
+
+                   btn.addClass("hide");
+               }
+
+            $("#error").append(alertmessage);
+        }
+        else {
+            var btn = $("#AddBtn");
+            if (btn.hasClass("hide")) {
+
+                btn.removeClass("hide");
+            }
+
+                $("#error").children().remove();
+
+        }
+
+
+
+
+    }
+
+    function SuccessPaid() {
+
+        Refresh();
+
+    }
+    function FailurePaid() {
+
+        RaiseError("Amount", "Error occured while adding amount.");
+    }
+
+    function SuccessDelete(item) {
+
+        $(item).remove();
+
+        Refresh();
+
+    }
+
+    function FailureDelete() {
+        RaiseError("Amount", "Error occured while deleting amount");
+    }
+
+    function Refresh() {
+        var currentURL = window.location;
+        window.location.hash = "#payments";
+        window.location.reload(true);
+    }
+
+    function RaiseError(title,message) {
+        var alertmessage = '<div class="alert alert-danger alert-dismissible" role= "alert" >  <button type="button" class="close" style="padding-top:0px !Important; margin-top:0px !Important;" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> <strong>'+title+'</strong> <small> '+message+'</small>   </div > ';
+
+        $("#error").children().remove();
+        $("#error").append(alertmessage);
+    }
+</script>
+}

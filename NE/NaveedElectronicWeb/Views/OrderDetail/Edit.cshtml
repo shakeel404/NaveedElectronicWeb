@@ -1,0 +1,198 @@
+﻿@model NaveedElectronicWeb.NEModel.OrderDetail
+
+@{ 
+    var Order = Model.CustomerOrder;
+}
+
+<h4>Edit Order Detail</h4>
+<p>
+   <ul class="breadcrumb">
+       <li class="active">
+           <strong>
+               @Html.ActionLink("Back to Details", "Details","Order",new {id=Order.Id },null)
+           </strong>
+       </li>
+   </ul>
+</p>
+        <hr />
+<div class="row">
+    <div class="col-md-4">
+        <ul id="mainboard" class="list-group">
+            <li class="list-group-item active">
+                Order
+            </li>
+            <li class="list-group-item">
+                <small class="text-info">Order by</small>
+                <h5><strong>@Order.Customer.CustomerName</strong> <small>@Order.Customer.City.CityName</small></h5>
+            </li>
+            <li class="list-group-item">
+                <small class="text-info">Guarantor</small>
+                @if (Order.Guarantor != null)
+                {
+                    <h5><strong>@Order.Guarantor.GuarantorName</strong></h5>
+                }
+                else
+                {
+                    <h5><strong>No Guarantor</strong></h5>
+                }
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-6">
+                        <small class="text-info">Order Date</small>
+                        <h5><strong>@Order.OrderDate.ToString("ddd, dd MMM yyyy")</strong></h5>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-info">Due Date</small>
+                        <h5><strong>@Order.DueDate.ToString("ddd, dd MMM yyyy")</strong></h5>
+                    </div>
+                </div>
+            </li>
+            @{
+                int GrandTotal = Order.OrderDetails.Sum(od => (od.SalePrice * od.Quantity) - od.Discount);
+                int NetPayment = Order.OrderPayments.Sum(op => op.AmountPaid);
+                int NetDues = GrandTotal - NetPayment;
+            }
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-6">
+                        <small class="text-info">Monthly Installment</small>
+                        <h5><strong>@Order.MonthlyInstallment</strong></h5>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-info">Remaining</small>
+                        <h5>
+                            <strong>
+                                @{ int NoOfInstallments = 0;
+                                    if (NetDues > 0 && Order.MonthlyInstallment > 0)
+                                    {
+                                        NoOfInstallments = (int)(NetDues / Order.MonthlyInstallment);
+                                    }
+                                }
+                                @NoOfInstallments
+                            </strong>
+                        </h5>
+                    </div>
+                </div>
+            </li>
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-4">
+                        <small class="text-info">Total</small>
+                        <h5><strong>@GrandTotal.00</strong></h5>
+                    </div>
+                    <div class="col-md-4">
+                        <small class="text-info">Payment</small>
+                        <h5><strong>@NetPayment.00</strong></h5>
+                    </div>
+                    <div class="col-md-4">
+                        <small class="text-info">Dues</small>
+                        <h5><strong id="TotalDues">@NetDues.00</strong></h5>
+                    </div>
+                </div>
+            </li>
+            
+        </ul>
+
+    </div>
+    <div class="col-md-8">
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+ 
+        @Html.HiddenFor(model=>model.OrderId)
+        @Html.HiddenFor(model=>model.ProductId) 
+        @Html.HiddenFor(model=>model.PurchasePrice)
+         @Html.HiddenFor(model=>model.SalePrice) 
+        
+        <div class="row">
+            <div class="col-md-1"></div>
+           <div class="col-md-9">
+               <ul class="list-group">
+                   <li class="list-group-item list-group-item-success">
+                       <div class="row">
+                           <div class="col-md-4">
+                               <small class="text-info">
+                                   Category
+                               </small>
+                               <h5><strong>@Model.Product.Category.CategoryName</strong></h5>
+                           </div>
+                           <div class="col-md-4">
+                               <small class="text-info">
+                                   Model
+                               </small>
+                               <h5><strong>@Model.Product.Model</strong></h5>
+                           </div>
+                           <div class="col-md-4">
+                               <small class="text-info">
+                                   Price
+                               </small>
+                               <h5><strong>@Model.SalePrice</strong></h5>
+                           </div>
+                       </div>
+                   </li>
+               </ul>
+
+           </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control quantity" } })
+                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-offset-2 col-md-10">
+                <p class="text-danger">Available <strong id="avlqty" >@Model.Product.Quantity</strong></p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Discount, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-warning" id="savebtn" />
+            </div>
+        </div>
+    </div>
+}
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(".quantity").change(function () {
+
+
+        var qty = parseInt($(this).val());
+        var avlqty = parseInt($("#avlqty").text());
+
+        var btn = $("#savebtn");
+
+        var qty = avlqty - qty;
+        if (qty < 0)
+        {
+            btn.hide();
+        }
+        else {
+            btn.show();
+           
+        }
+    });
+    </script>
+}

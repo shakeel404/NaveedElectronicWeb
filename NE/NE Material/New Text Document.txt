@@ -1,0 +1,45 @@
+
+<div class="row">
+    <form method="post" action="/Create/">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-2">
+                        <small class="text-info">Category</small><br />
+                        <small>CategoryName</small>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="hidden" value="ProductId" id="ProductId" name="ProductId"/>
+                        <small class="text-info">Model</small><br />
+                        <small>Model</small>
+                    </div> 
+                    <div class="col-md-1 text-center">
+                        <input type="hidden" value="Quantity" id="Quantity" name="Quantity" />
+                        <small class="text-info" >Quantity</small><br />
+                        <small>QuantityValue</small>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <input type="hidden" value="Price" id="SalePrice" name="Price" />
+                        <small class="text-info">Price</small><br />
+                        <small>Price</small>
+                    </div>
+                    <div class="col-md-1 text-center"> 
+                        <small class="text-info">Tatal</small><br />
+                        <small>Total</small>
+                    </div>
+                    <div class="col-md-2">
+                        
+                        <small class="text-info">Discount</small><br />
+                        <input min="0" max="999999999" class="form-control" type="number" value="0" id="Disount" name="Discount" placeholder="Discount" />
+                    </div>
+                    <div class="col-md-1 text-center">
+                        
+                        <small class="text-info">Net Total</small><br />
+                        <small>Net Total</small><br />
+                    </div>
+                </div>
+            </li>
+        </ul> 
+
+    </form>
+</div>

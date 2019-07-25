@@ -1,0 +1,208 @@
+﻿@model NaveedElectronicWeb.NEModel.Customer
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Customer</h4>
+
+        <p>
+
+            <ul class="breadcrumb">
+                <li class="active">
+                    <strong>
+                        @Html.ActionLink("Back to List", "Index")
+                    </strong>
+                </li>
+            </ul>
+
+        </p>
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model=>model.Id)
+        @Html.HiddenFor(model=>model.CityId,new { id="CityIdDefault"})
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <div class="control-label col-md-4">
+                        <label for="CitySelect">City</label>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="input-group">
+
+
+
+                                    <select class="form-control" data-val="true" data-val-number="The Please select a city." data-val-range="Please select a city." data-val-range-max="999999999" data-val-range-min="1" data-val-required="Pleae select city." id="CityId"  placeholder="Select a City">
+                                        <option value="0">Select a city</option>
+                                    </select>
+                                    <span class="input-group-btn">
+                                        <button data-toggle="collapse" data-target="#city" class="btn btn-success" type="button"><span class="glyphicon glyphicon-plus"></span></button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <span class="field-validation-valid text-danger" data-valmsg-for="CityId" data-valmsg-replace="true"></span>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CustomerName, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FatherName, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.FatherName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FatherName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NIC, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.NIC, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NIC, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PrimaryAddress, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.PrimaryAddress, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.PrimaryAddress, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-8">
+                        <input type="submit" value="Save" class="btn btn-warning" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+
+                <div class="collapse" id="city">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="sizing-addon2">City</span>
+                                <input type="text" class="form-control" id="citytextbox" placeholder="City Name">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success" onclick="AddCity()" type="button">Add</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="error">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+     
+<script>
+
+    $("#CityId").change(function () {
+
+        var cityid = $(this).val();
+        $("#CityIdDefault").val(cityid);
+
+    });
+    $(document).ready(function () {
+
+        GetCities();
+
+    });
+    $("#NIC").mask("99999-9999999-9");
+    var apiurl = "@Url.Action("","api/City")";
+    function GetCities() {
+        
+        var select = $("#CityId");
+
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $(select).html(procemessage).show();
+
+
+        $.ajax({
+            url: apiurl,
+            cache: false,
+            type: "GET",
+            success: function (data) {
+
+
+                var markup = "<option value='0'>Select city</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].Id + ">" + data[x].CityName + "</option>";
+                }
+                $(select).html(markup).show();
+                SetSelectedDefault();
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function AddCity() {
+
+        $("#error").children().remove();
+        var cityname = $("#citytextbox").val();
+        if (cityname.length === 0) {
+
+            return;
+        }
+
+        var error = ' <div class="alert alert-warning alert-dismissible" role="alert"> <button type= "button" class="close" data-dismiss="alert" aria-label="Close" > <span aria-hidden="true">&times;</span></button> <strong>Error!</strong> Error occured while adding city please try again. </div>';
+        var citydata = { cityname: cityname };
+        $.ajax({
+            url: apiurl,
+            data: JSON.stringify({ cityname: cityname }),
+            traditional: true,
+            type: "POST",
+            contentType: "application/json",
+            success: function (data) {
+                $("#citytextbox").val('');
+                GetCities();
+            },
+            error: function (response) {
+                console.log("Error");
+                $("#error").append(error);
+
+            }
+        });
+    }
+    function SetSelectedDefault() {
+        var id = $("#CityIdDefault").val();
+
+        $("#CityId").val(id);
+    }
+
+</script>
+
+}
